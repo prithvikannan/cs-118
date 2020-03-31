@@ -46,5 +46,11 @@
     - break messages into packets
     - forward packets from routers to the next using routes computed 
     - transmit packets at full speed (back to back)
-
-CURRENTLY AT 1:36:38
+    - it takes L/R seconds to send L bits at R bps
+    - end-end delay is 2L/R since it must go through the router
+    - preferred to circuit switching
+- circuit switching
+    - used by telephone networks
+    - establish a dedicated circuit (reserve the resource) for the duration of the usage
+    - frequency division multiplexer (FDM): each user is partitioned on different frequencies
+    - time division multiplexer (TDM): at any given time, a user can use all frequencies
