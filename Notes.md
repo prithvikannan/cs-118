@@ -50,8 +50,8 @@
   - break messages into packets
   - forward packets from routers to the next using routes computed
   - transmit packets at full speed (back to back)
-  - it takes L/R seconds to send L bits at R bps
-  - end-end delay is 2L/R since it must go through the router
+  - it takes $L/R$ seconds to send $L$ bits at $R$ bps
+  - end-end delay is $2L/R$ since it must go through the router
 - circuit switching
   - used by telephone networks
   - establish a dedicated circuit (reserve the resource) for the duration of the usage
@@ -64,7 +64,7 @@
   - "reserved resources" for circuit switching
   - "on demand" for packet switching
 - computing probability for x active out of N users
-  - $P(n,x) = {n \choose x}p^x (1-p)^{N-x}$
+  - $P(n,x) = {n \choose x} p^x (1-p)^{N-x}$
   - summation of P(N,x) for 0 up to x to get total
   - use a confidence interval such as <0.1%
   - example: 1 Mb/s link, 100kb/s per user and active 10% of the time
@@ -81,3 +81,25 @@
     - between access nets and ISP are regional and IXP
 
 ## Delay and Loss
+- packet delay = time to transmit packet = $L/R$
+- end-end delay = $2L/R$
+  - router must wait for the entire packet to arrive before forwarding
+- queuing occurs if arrival rates to link exceeds transmission rate
+  - packets sit in buffer queue when waiting
+  - packets can be lost if the buffer fills up
+- 4 sources of packet delay
+  - processing: router must check the packet, lookup table
+  - queuing: wait for queue to be served, depends on congestion
+    - traffic intensity $La/R$ where $L$ is packet length, $R$ is bandwidth, $a$ is average packet arrival rate
+    - $La/R$ < 0 then delay small, and increases to infinity 
+  - transmission: $L/R$ 
+    - "putting the packets on the link"
+  - propagation: $d/s$ where $d$ is length of link, $s$ is propagation speed (limited by physics)
+    - important for large physical distance
+- `traceroute` tracks delay along routers until reaching the destination
+    - sends 3 packets to each router iteratively
+    - high variability
+- packet loss
+    - can be due to corruption
+    - can be dropped by a full queue
+        - may be retransmitted by previous node or just lost
