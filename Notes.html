@@ -1,0 +1,148 @@
+<!doctype html><html><head><meta charset="utf-8">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/github-markdown-css/2.10.0/github-markdown.min.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/9.13.1/highlight.min.js">
+<link  rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.10.0/dist/katex.min.css" integrity="sha384-9eLZqc9ds8eNjO3TmqPeYcDj8n+Qfa4nuSiGYa6DjLNcv9BtN69ZIulL9+8CqC9Y" crossorigin="anonymous">
+<link rel="stylesheet" href="https://gitcdn.xyz/repo/goessner/mdmath/master/css/texmath.css">
+<link rel="stylesheet" href="https://gitcdn.xyz/repo/goessner/mdmath/master/css/vscode-texmath.css">
+
+</head><body>
+<h1 id="cs118-2" data-line="0" class="code-line">CS118</h1>
+<h2 id="introduction-2" data-line="2" class="code-line">Introduction</h2>
+<ul>
+<li data-line="4" class="code-line">Become an <em>internet developer</em></li>
+<li data-line="5" class="code-line">4 quizzes (60%)
+<ul>
+<li data-line="6" class="code-line">covering a few chapters each</li>
+<li data-line="7" class="code-line">weight tbd</li>
+</ul>
+</li>
+<li data-line="8" class="code-line">2 projects (20%)
+<ol>
+<li data-line="9" class="code-line">Web server</li>
+<li data-line="10" class="code-line">TCP transport protocal</li>
+</ol>
+<ul>
+<li data-line="11" class="code-line">C/C++ in linux env</li>
+</ul>
+</li>
+<li data-line="12" class="code-line">weekly homework (20%)</li>
+</ul>
+<h2 id="overview-of-internet-2" data-line="14" class="code-line">Overview of internet</h2>
+<ul>
+<li data-line="16" class="code-line">web is geographically divided across different internet service providers (ISPs)</li>
+<li data-line="17" class="code-line">3 types of hardware components
+<ul>
+<li data-line="18" class="code-line">host: laptop, smartphone, server</li>
+<li data-line="19" class="code-line">communication links: fiber, radio</li>
+<li data-line="20" class="code-line">routers: hardware components for internet, packet switching</li>
+</ul>
+</li>
+<li data-line="21" class="code-line">network strucutre
+<ul>
+<li data-line="22" class="code-line">edge: hosts, servers</li>
+<li data-line="23" class="code-line">access networks: wired/wireless links</li>
+<li data-line="24" class="code-line">core: connected routers</li>
+</ul>
+</li>
+</ul>
+<h2 id="network-edge-2" data-line="26" class="code-line">Network edge</h2>
+<ul>
+<li data-line="28" class="code-line">different access networks
+<ul>
+<li data-line="29" class="code-line">downstream speeds more important than upstream speeds</li>
+<li data-line="30" class="code-line">DSL
+<ul>
+<li data-line="31" class="code-line">reuses telephone line</li>
+</ul>
+</li>
+<li data-line="32" class="code-line">cable
+<ul>
+<li data-line="33" class="code-line">shared coax cable</li>
+</ul>
+</li>
+<li data-line="34" class="code-line">ethernet
+<ul>
+<li data-line="35" class="code-line">high speed network for enterprise</li>
+<li data-line="36" class="code-line">connected by ethernet switches</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-line="37" class="code-line">wireless networks
+<ul>
+<li data-line="38" class="code-line">LAN
+<ul>
+<li data-line="39" class="code-line">within a building</li>
+</ul>
+</li>
+<li data-line="40" class="code-line">wide area
+<ul>
+<li data-line="41" class="code-line">LTE, cellular services</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="network-core-2" data-line="43" class="code-line">Network core</h2>
+<ul>
+<li data-line="45" class="code-line">mesh of interconnected routers</li>
+<li data-line="46" class="code-line">routing: determines source-destination route taken by packets</li>
+<li data-line="47" class="code-line">forwarding: moving packets from a router's input to another router's output</li>
+<li data-line="48" class="code-line">packet-switching
+<ul>
+<li data-line="49" class="code-line">break messages into packets</li>
+<li data-line="50" class="code-line">forward packets from routers to the next using routes computed</li>
+<li data-line="51" class="code-line">transmit packets at full speed (back to back)</li>
+<li data-line="52" class="code-line">it takes L/R seconds to send L bits at R bps</li>
+<li data-line="53" class="code-line">end-end delay is 2L/R since it must go through the router</li>
+</ul>
+</li>
+<li data-line="54" class="code-line">circuit switching
+<ul>
+<li data-line="55" class="code-line">used by telephone networks</li>
+<li data-line="56" class="code-line">establish a dedicated circuit (reserve the resource) for the duration of the usage</li>
+<li data-line="57" class="code-line">frequency division multiplexer (FDM): each user is partitioned on different frequencies</li>
+<li data-line="58" class="code-line">time division multiplexer (TDM): at any given time, a user can use all frequencies</li>
+</ul>
+</li>
+<li data-line="59" class="code-line">packet-switching is preferred to circuit-switching
+<ul>
+<li data-line="60" class="code-line">more robust; will still work if parts of the network go down</li>
+<li data-line="61" class="code-line">support more users can be on the the network by sharing resources; better for bursts of data</li>
+<li data-line="62" class="code-line">however can create network congestion and lose packets</li>
+<li data-line="63" class="code-line">&quot;reserved resources&quot; for circuit switching</li>
+<li data-line="64" class="code-line">&quot;on demand&quot; for packet switching</li>
+</ul>
+</li>
+<li data-line="65" class="code-line">computing probability for x active out of N users
+<ul>
+<li data-line="66" class="code-line"><eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>P</mi><mo stretchy="false">(</mo><mi>n</mi><mo separator="true">,</mo><mi>x</mi><mo stretchy="false">)</mo><mo>=</mo><mrow><mo fence="true">(</mo><mfrac linethickness="0px"><mi>n</mi><mi>x</mi></mfrac><mo fence="true">)</mo></mrow><msup><mi>p</mi><mi>x</mi></msup><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>p</mi><msup><mo stretchy="false">)</mo><mrow><mi>N</mi><mo>−</mo><mi>x</mi></mrow></msup></mrow><annotation encoding="application/x-tex">P(n,x) = {n \choose x}p^x (1-p)^{N-x}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">P</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault">x</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1.20001em;vertical-align:-0.35001em;"></span><span class="mord"><span class="mord"><span class="mopen delimcenter" style="top:0em;"><span class="delimsizing size1">(</span></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.7453919999999999em;"><span style="top:-2.3550000000000004em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">x</span></span></span></span><span style="top:-3.144em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose delimcenter" style="top:0em;"><span class="delimsizing size1">)</span></span></span></span><span class="mord"><span class="mord mathdefault">p</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.664392em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">x</span></span></span></span></span></span></span></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1.0913309999999998em;vertical-align:-0.25em;"></span><span class="mord mathdefault">p</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8413309999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.10903em;">N</span><span class="mbin mtight">−</span><span class="mord mathdefault mtight">x</span></span></span></span></span></span></span></span></span></span></span></span></eq></li>
+<li data-line="67" class="code-line">summation of P(N,x) for 0 up to x to get total</li>
+<li data-line="68" class="code-line">use a confidence interval such as &lt;0.1%</li>
+<li data-line="69" class="code-line">example: 1 Mb/s link, 100kb/s per user and active 10% of the time
+<ul>
+<li data-line="70" class="code-line">circuit switching can support 10 users</li>
+<li data-line="71" class="code-line">packet switching can support ~35 users (calculated using probability that 10 of them are active at the same time)</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-line="72" class="code-line">connecting networks
+<ul>
+<li data-line="73" class="code-line">decentralized: naive way is <eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mi>n</mi><mn>2</mn></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n^2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1.064108em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">n</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141079999999999em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></eq></li>
+<li data-line="74" class="code-line">centralized: global ISP is <eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><mi>n</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord mathdefault">n</span><span class="mclose">)</span></span></span></span></eq> but creates a bottleneck</li>
+<li data-line="75" class="code-line">hierarchical: shared network infrastructure with multiple ISP
+<ul>
+<li data-line="76" class="code-line">IXP is a third party to connect ISP</li>
+<li data-line="77" class="code-line">peering links are &quot;deals&quot; between ISPs</li>
+<li data-line="78" class="code-line">regional networks between access nets and ISP as a layer of indirection</li>
+<li data-line="79" class="code-line">content provider networks (eg. Google, Microsoft) are connected to tier 1 ISP</li>
+<li data-line="80" class="code-line">between access nets and ISP are regional and IXP</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="delay-and-loss-2" data-line="82" class="code-line">Delay and Loss</h2>
+
+</body></html>
