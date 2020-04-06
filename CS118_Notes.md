@@ -103,3 +103,26 @@
     - can be due to corruption
     - can be dropped by a full queue
         - may be retransmitted by previous node or just lost
+
+## Protocols
+- format, order of message, action
+- building block for network software
+- developed in layered stack
+  - ensures modularity and separation between layers
+  - more layers is more overhead as each adds header bits
+- 5 conventional layers
+  - application layer (http)
+  - transport (TCP, UDP)
+  - network (IP)
+  - link (WiFi
+    - switch is at this layer and is therefore not visible to the network
+  - physical (bits on the wire)
+
+## Application architectures
+- client-Server model
+  - programs to run on different end hosts, asymmetric
+    - developer does not need to write any software for the network core
+  - server is always on with a permanent IP
+  - clients may be dynamic and can only communicate to server directly
+- peer-to-peer (P2P)
+  - both sides run the same code
