@@ -81,6 +81,7 @@
     - between access nets and ISP are regional and IXP
 
 ## Delay and Loss
+
 - packet delay = time to transmit packet = $L/R$
 - end-end delay = $2L/R$
   - router must wait for the entire packet to arrive before forwarding
@@ -91,20 +92,21 @@
   - processing: router must check the packet, lookup table
   - queuing: wait for queue to be served, depends on congestion
     - traffic intensity $La/R$ where $L$ is packet length, $R$ is bandwidth, $a$ is average packet arrival rate
-    - $La/R$ < 0 then delay small, and increases to infinity 
-  - transmission: $L/R$ 
+    - $La/R$ < 0 then delay small, and increases to infinity
+  - transmission: $L/R$
     - "putting the packets on the link"
   - propagation: $d/s$ where $d$ is length of link, $s$ is propagation speed (limited by physics)
     - important for large physical distance
 - `traceroute` tracks delay along routers until reaching the destination
-    - sends 3 packets to each router iteratively
-    - high variability
+  - sends 3 packets to each router iteratively
+  - high variability
 - packet loss
-    - can be due to corruption
-    - can be dropped by a full queue
-        - may be retransmitted by previous node or just lost
+  - can be due to corruption
+  - can be dropped by a full queue
+    - may be retransmitted by previous node or just lost
 
 ## Protocols
+
 - format, order of message, action
 - building block for network software
 - developed in layered stack
@@ -112,17 +114,55 @@
   - more layers is more overhead as each adds header bits
 - 5 conventional layers
   - application layer (http)
+    - some are open and defined in RFC
+    - proprietary for specific applications like Skype
   - transport (TCP, UDP)
   - network (IP)
-  - link (WiFi
+  - link (WiFi)
     - switch is at this layer and is therefore not visible to the network
   - physical (bits on the wire)
 
 ## Application architectures
-- client-Server model
+
+- client-server model
   - programs to run on different end hosts, asymmetric
     - developer does not need to write any software for the network core
   - server is always on with a permanent IP
+    - must be designed to scale (ie large data centers)
   - clients may be dynamic and can only communicate to server directly
+  - on the same host, processes can use inter-process communication
+  - across hosts, processes exchange messages using socket
 - peer-to-peer (P2P)
   - both sides run the same code
+  - end systems can directly communicate
+  - self-scalability - each peer brings service capacity and demand
+  - connections and IP can change
+
+## Addressing processes
+  - hosts have unique 32-bit IP address to identify
+    - ex. 172.217.1.36
+  - different processes on a host are indicated by port numbers
+    - ex. port 80 for http server, port 25 for mail server
+  - OS knows when messages come into a port, it can send the message to the corresponding process
+
+## TCP vs UDP
+- depends on application's needs
+  - data integrity; some apps can tolerate loss
+  - timing/latency
+  - throughput
+  - security
+- TCP tries to provide everything
+  - reliable transport, flow control, congestion throttle
+  - requires client/server to setup connection
+  - does not provide security
+- UDP is generally worse than TCP
+  - does not provide the benefits that TCP has
+  - also does not provide security
+  - but it is faster because less overhead
+
+## Web and HTTP
+- client-server model
+- the browser is the client
+  - webpage is made up of objects such as HTML, image, applet, video
+  - sends URL in form [host] [path] to the web server
+- web server is hosted 
