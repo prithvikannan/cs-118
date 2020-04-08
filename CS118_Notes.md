@@ -139,13 +139,15 @@
   - connections and IP can change
 
 ## Addressing processes
-  - hosts have unique 32-bit IP address to identify
-    - ex. 172.217.1.36
-  - different processes on a host are indicated by port numbers
-    - ex. port 80 for http server, port 25 for mail server
-  - OS knows when messages come into a port, it can send the message to the corresponding process
+
+- hosts have unique 32-bit IP address to identify
+  - ex. 172.217.1.36
+- different processes on a host are indicated by port numbers
+  - ex. port 80 for http server, port 25 for mail server
+- OS knows when messages come into a port, it can send the message to the corresponding process
 
 ## TCP vs UDP
+
 - depends on application's needs
   - data integrity; some apps can tolerate loss
   - timing/latency
@@ -161,8 +163,69 @@
   - but it is faster because less overhead
 
 ## Web and HTTP
+
 - client-server model
 - the browser is the client
   - webpage is made up of objects such as HTML, image, applet, video
-  - sends URL in form [host] [path] to the web server
-- web server is hosted 
+  - sends URL in form [host][path] to the web server
+- web server is hosted at port 80 always
+- non-persistent HTTP (1.0)
+  - algorithm
+    - 1 request to setup TCP connection
+    - 1 request for each referenced object (by URL)
+    - closes connection after recieving object
+    - parses html response and decides if subsequent requests are neeeded
+  - time is $2*time_{round}$
+  - can be parallelized at the cost of OS resources
+- persistent HTTP (1.1)
+  - keeps the TCP connection open for multiple messages
+  - closes connection if inactive
+- example: webpage with 10 refence object
+  - $2T$ _is used because every message needs to go to server and back_
+  - non-persistent HTTP $2T * 2*T*10 = 22T$
+  - persistent HTTP $2T * T*10 = 12T$
+  - paralled non-persistent HTTP $2T * 2*T$ (for the first 5) $+2*T$ (for the next 5) $= 6T$
+- HTTP message
+  - request 
+    - request line with GET/POST and the desired object
+    - header lines with parameters such as browser, host, encoding, idle time
+    - body
+    - encoded into smaller form
+  - response
+    - status line (200, 400, 404, 505, etc)
+    - header lines with parameters such as local time, server OS, last modified, length, type
+    - requested data in body
+  - HTTP 1.0
+    - GET, POST (sends input data), HEAD (doesn't need object)
+  - HTTP 1.1
+    - all of HTTP 1.0
+    - PUT (sends entire file to server)
+    - DELETE
+  - HTTP 2.0
+    - designed for throughput connections
+    - multiplexing streams over one connection
+    - request-response pipelining
+- stateless HTTP
+  - server cannot infer whether the client visits before the request is sent
+  - modern applications like Amazon have workarounds such as cookies
+    - store ids in the local web browser and send in request
+    - Amazon stores your id in their database
+    - cost is user privacy
+- web caches to improve response time
+  - maintained by ISPs
+  - proxy server closer to client, reduces propagation delay
+  - cache information for popular webpages
+  - conditional get
+    - server only sends new object is it has been updated
+    - use last modified time 
+
+## Email
+- user agents (clients)
+  - composing/reading email
+- mail server
+  - maintains a mailbox for each user
+  - message queue of outgoing mails
+- SMTP
+  - "push" rather than HTTP pull
+  - ASCII for everything
+  - persistent connections
