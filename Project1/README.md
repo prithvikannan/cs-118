@@ -1,6 +1,4 @@
-# CS118 Project 1
-
-## Web Server Implementation
+# Project 1: Web Server Implementation
 
 Name: Prithvi Kannan
 
@@ -9,7 +7,7 @@ Email: prithvi.kannan@gmail.com
 UID: 405110096
 
 ## Usage
-Run `make` to compile `server.c` into an executable `server`. 
+Run `make` to compile `server.c` into an executable called `server`. 
 
 To start the server, run `./server [port]`.  To make a request, using a web browser, type `[host]:[port]/[file.ext]` and the server will send that file to the browser. Requests will be logged to the server.
 
