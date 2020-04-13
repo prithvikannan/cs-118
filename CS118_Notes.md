@@ -186,7 +186,7 @@
   - persistent HTTP $2T * T*10 = 12T$
   - paralled non-persistent HTTP $2T * 2*T$ (for the first 5) $+2*T$ (for the next 5) $= 6T$
 - HTTP message
-  - request 
+  - request
     - request line with GET/POST and the desired object
     - header lines with parameters such as browser, host, encoding, idle time
     - body
@@ -217,9 +217,10 @@
   - cache information for popular webpages
   - conditional get
     - server only sends new object is it has been updated
-    - use last modified time 
+    - use last modified time
 
 ## Email
+
 - user agents (clients)
   - composing/reading email
 - mail server
@@ -229,3 +230,78 @@
   - "push" rather than HTTP pull
   - ASCII for everything
   - persistent connections
+- mail access protocol
+  - POP: post office protocol
+  - IMAP: internet mail access protocol
+  - HTTP: gmail, office365
+
+## Domain Name System (DNS)
+
+- given the host name find the IP address
+- DNS services
+  - users need readable names
+  - routers need IP addresses
+  - host aliasing, mail server aliasing, load distribution
+- must be a distributed database
+  - traffic volume extremely high
+  - centralized system doesn't scale
+- hierarchy design concept
+  - host names must be hierarchical
+    - `kiwi.cs.ucla.edu`
+    - hierarchy from right to left
+  - each name server handles part of hierarchy
+    - abstracted from other layers
+- example `www.amazon.com`
+  - query root server to find com DNS
+  - query .com DNS server to get amazon.com
+  - query amazon.com DNS server to get IP address for www.amazon.com
+- different DNS servers
+  - root name servers
+    - only 13 total
+    - returns mapping to local name server
+  - authorative DNS server
+    - maintained by the organization and provide their own hostname to IP mappings
+  - local DNS server/default name server
+    - ex. CS department server
+    - if response is cached, it may return translation
+    - otherwise forwards request through the hierarchy
+- iterated query (default)
+  - "i don't know the name, but ask this server"
+  - local DNS server takes burden
+- recursive query
+  - higher-level servers provide answers on behalf
+  - puts heavy load on upper levels
+- DNS caches
+  - at every level, cache some results
+  - cache entries timeout and are removed
+  - update/notify mechanisms are in place to indicate outdated cache entries
+- DNS protocol uses UDP for both query and reply messages (sync via message ID)
+
+## P2P applications
+
+- end systems can directly communicate
+- file distribution client-server
+  - $NF/u_s$ is the time to send N copies sequentially
+  - $F/d_{min}$ is the time for a client to download
+  - $D_{c-s}\geq max\{NF/u_s,F/d_{min}\}$
+  - distribution time is proportional to number of clients
+- file distribution p2p
+  - $NF/(u_s+Su_i)$ for the client to download $NF$ bits total from peers with added service capacity $Su_i$
+  - $D_{p2p}\geq max\{F/u_s,F/d_{min},NF/(u_s+Su_i)\}$
+  - distribution time grows slower as N increases
+- bittorrent
+
+## Content distribution networks
+
+- challenges of scale and heterogeneity
+- video formats
+  - transmitted as a sequence of images
+  - coding uses redundancy within and between images to compress image (MPEG4)
+- dynamic adaptive streaming over HTTP (DASH)
+  - server divides video into chunks, encoded and stored at different rates
+  - manifest file contains URL for each chunk
+  - client measures bandwidth and requests appropriate chunk, consulting the manifest
+  - puts more intelligence on the client side
+- store copies of the videos at different sites around the world
+  - client is directed to a nearby CDN
+  - video hosting website will redirect you to the IP address of the CDN
