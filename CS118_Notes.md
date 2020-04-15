@@ -305,3 +305,42 @@
 - store copies of the videos at different sites around the world
   - client is directed to a nearby CDN
   - video hosting website will redirect you to the IP address of the CDN
+
+# Transport layer
+
+## Transport layer services
+- logical communication between processes
+- send segments, not packets
+
+## MUX and DeMUX
+- multiplexing combines data from multiple sockets at sender
+  - add headers to identify process
+- demultiplexing is done on the reciever side
+  - IP datagram has source and dest IPs
+  - port number identifies the process
+  - connectionless demultiplexing
+    - all UDP segments with the same destination port number will be combined
+    - only 1 application process to serve all requests
+  - connection oriented demux
+    - TCP socket identified by tuple of source/dest IP and ports
+    - server can support many simultaneous TCP sockets
+
+## Connectionless transport: UDP
+- low overhead, barebones protocol
+- segments may be lost or delivered out of order
+- each segment is handled independently
+- checksum to detect transmission errors
+  - convert contents to ints and add with 1's complement
+  - reciever recomputes checksum and compares
+  - checksum may let errors pass through 
+- usage
+  - streaming, DNS, SNMP
+
+## Reliable data transfer
+- making reliable services over an unreliable channel
+- formalized using finite state machines
+- rdt1.0: channel is reliable
+- rdt2.0: channel can have errors
+  - reciever gives sender ACK if good
+  - reciever give sender NAK if errors, sender retransmits 
+- rdt2.1:
