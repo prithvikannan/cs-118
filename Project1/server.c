@@ -152,11 +152,9 @@ int main(int argc, char *argv[])
 
 		dprintf(newsockFd, "\r\n\0");
 		
-		// Max request length
 		char tempbuf[REQUEST_MAX];
 		int fileFd = fileno(f);
 
-		// Persistent HTTP
 		while (1) {
 			int x = read(fileFd, tempbuf, sizeof tempbuf);
 			switch (x) {
