@@ -113,8 +113,10 @@ int main(int argc, char *argv[])
 			ext = 'h';
 		} else if ((strcasecmp(extensionString, "jpeg") == 0) || (strcasecmp(extensionString, "jpg") == 0)) {
 			ext = 'j';
-		} else if (strcasecmp(extensionString, "gif") == 0) {
-			ext = 'g';
+		} else if (strcasecmp(extensionString, "png") == 0) {
+			ext = 'p';
+		} else if (strcasecmp(extensionString, "txt") == 0) {
+			ext = 't';
 		}
 
 		FILE* f = fopen(pathString, "r");
@@ -130,23 +132,25 @@ int main(int argc, char *argv[])
 		dprintf(newsockFd, "HTTP/1.1 200 OK\n");
 		dprintf(newsockFd, "Content-Length: %d\n", size);
 
-
-
 		switch (ext) {
 		case 'h':
-			write(newsockFd, "Content-Type: text/html\n\n", 25);
+			dprintf(newsockFd, "Content-Type: text/html\r\n\0");
+			break;
+		case 't':
+			dprintf(newsockFd, "Content-Type: text/plain\r\n\0");
 			break;
 		case 'j':
-			write(newsockFd, "Content-Type: image/jpeg\n\n", 26);
+			dprintf(newsockFd, "Content-Type: image/jpeg\r\n\0");
 			break;
-		case 'g':
-			write(newsockFd, "Content-Type: image/gif\n\n", 25);
+		case 'p':
+			dprintf(newsockFd, "Content-Type: image/png\r\n\0");
 			break;
 		default:
-			write(newsockFd, "Content-Type: application/octet-stream\n\n", 40);
-			write(newsockFd, "Content-Disposition: attachment\n\n", 33);
+			dprintf(newsockFd, "Content-Type: application/octet-stream\r\n\0");
 			break;
 		}
+
+		dprintf(newsockFd, "\r\n\0");
 		
 		// Max request length
 		char tempbuf[REQUEST_MAX];
