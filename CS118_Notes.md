@@ -309,10 +309,12 @@
 # Transport layer
 
 ## Transport layer services
+
 - logical communication between processes
 - send segments, not packets
 
 ## MUX and DeMUX
+
 - multiplexing combines data from multiple sockets at sender
   - add headers to identify process
 - demultiplexing is done on the reciever side
@@ -326,21 +328,49 @@
     - server can support many simultaneous TCP sockets
 
 ## Connectionless transport: UDP
+
 - low overhead, barebones protocol
 - segments may be lost or delivered out of order
 - each segment is handled independently
 - checksum to detect transmission errors
   - convert contents to ints and add with 1's complement
   - reciever recomputes checksum and compares
-  - checksum may let errors pass through 
+  - checksum may let errors pass through
 - usage
   - streaming, DNS, SNMP
 
 ## Reliable data transfer
+
 - making reliable services over an unreliable channel
 - formalized using finite state machines
 - rdt1.0: channel is reliable
 - rdt2.0: channel can have errors
+  - use checksum to determine if the packet was corrupted
   - reciever gives sender ACK if good
-  - reciever give sender NAK if errors, sender retransmits 
-- rdt2.1:
+  - reciever give sender NAK if errors, sender retransmits
+- rdt2.1: sequence numbers
+  - what if the ACK/NAK message is corrupted? should sender retransmit or drop?
+  - add unique (sequence #) id on the sender side so the reciever know whether they are sent a duplicate or next packet
+  - 2 sequence numbers is enough to handle corrupted bits
+    - rotate between 0 and 1
+    - interpretation of ACK/NAK depends on previous state
+- rdt2.2: only ACK
+  - reciever will send ACK for the last correctly recieved packet
+  - duplicate ACK = NAK
+    - if server sent pck1 but reciever sends back ack0, that means NAK
+- rdt3.0: channels with errors and loss
+  - timer to wait for ack
+  - if packet is lost, then makes sense to retransmit
+  - if packet is delayed, duplicate will be sent but seq #'s handles
+  - optimal timer
+    - large timer works but is slow, small timer can create interference
+    - ideal timeout is slightly larger than past RTT
+- pipeline
+  - send multiple "in-flight" packets 
+  - amortize RTT across multiple packets
+  - go-back-N
+    - sliding window moves when ack recieved
+    - reciever drops after missing packet
+      - sender will resend N packets after missing packet
+  - selective repeat
+    - send individual ack
