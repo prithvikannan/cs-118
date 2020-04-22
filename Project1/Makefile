@@ -7,4 +7,4 @@ clean:
 	rm -rf server *.tar.gz
 
 dist: default
-	tar -czvf lab0-405110096.tar.gz lab0.c README Makefile backtrace.png breakpoint.png checker.sh
+	tar -czvf 405110096.tar.gz server.c Makefile README.md
