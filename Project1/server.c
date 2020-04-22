@@ -15,6 +15,7 @@ const int REQUEST_MAX = 8192;
 const int PATH_MAX = 4096;
 const int EXTENSION_MAX = 5;
 
+// error handling for when a bad request is sent
 void badRequest (int newsockFd) {
 	dprintf(newsockFd, "HTTP/1.1 404 Not Found\nContent-Length: 13\nContent-Type: text/html\n\n<h1>404 Not Found</h1>");
 	close(newsockFd);
@@ -28,6 +29,7 @@ int main(int argc, char *argv[])
 	struct sockaddr_in serverAddress, clientAddress;
 	struct stat s;
 
+	// confirms that the program is started with only a port argument
 	if (argc != 2) {
 		fprintf(stderr,"Error: correct usage is ./server [port]\n");
         exit(1);
@@ -35,34 +37,40 @@ int main(int argc, char *argv[])
 
 	port = atoi(argv[1]);
 
+	// create a socket using ipv4
 	sockFd = socket(AF_INET, SOCK_STREAM, 0);
 	if (sockFd == -1) {
 		fprintf(stderr,"Error: unable to create socket\n");
 		exit(1);
     }
 
+	// sets serverAddress fields
 	memset((char *)&serverAddress, 0, sizeof(serverAddress));
 	serverAddress.sin_family = AF_INET;
 	serverAddress.sin_addr.s_addr = INADDR_ANY;
 	serverAddress.sin_port = htons(port);
 
+	// binds socket to localhost:port
 	if (bind(sockFd, (struct sockaddr *) &serverAddress, sizeof(serverAddress)) == -1) {
 		fprintf(stderr,"Error: unable to bind\n");
 		exit(1);
     }
 
+	// listens for up to 3 connections at once
 	listen(sockFd, 3);
 
+	// server runs forever
 	while (1) {
-		newsockFd = accept(sockFd, (struct sockaddr *) &clientAddress, &client);
 
+		// accepts connection request as a new file descriptor
+		newsockFd = accept(sockFd, (struct sockaddr *) &clientAddress, &client);
 		if (newsockFd == -1) {
 			fprintf(stderr,"Error: could not accept incoming connection\n");
 			exit(1);
         }
 
+		// buffer to hold the HTTP request
 		char request[REQUEST_MAX];
-
 		memset(request, 0, REQUEST_MAX);
 
 		int r = read(newsockFd, request, REQUEST_MAX);
@@ -76,14 +84,13 @@ int main(int argc, char *argv[])
 		char pathString[PATH_MAX];
 		memset(pathString, 0, sizeof(pathString));
 		int pathIdx = 0;
-
 		char extensionString[EXTENSION_MAX];
 		memset(extensionString, 0, sizeof(extensionString));
 		int extensionIdx = 0;
-
 		int extensionBool = 0;
-
 		int k = 5;
+
+		// parse the request to get the desired file name and extension
 		while (k < 4096) {
 			if (request[k] == ' ') { 
 				break; 
@@ -119,6 +126,7 @@ int main(int argc, char *argv[])
 			ext = 't';
 		}
 
+		// open desired file
 		FILE* f = fopen(pathString, "r");
 		if (f == 0) {
 			badRequest(newsockFd);
@@ -129,9 +137,9 @@ int main(int argc, char *argv[])
 		int size = s.st_size;
 		int slen = (ceil(log10(size)) + 21);
 
+		// send output to the client with appropriate headers
 		dprintf(newsockFd, "HTTP/1.1 200 OK\n");
 		dprintf(newsockFd, "Content-Length: %d\n", size);
-
 		switch (ext) {
 		case 'h':
 			dprintf(newsockFd, "Content-Type: text/html\r\n\0");
@@ -152,6 +160,7 @@ int main(int argc, char *argv[])
 
 		dprintf(newsockFd, "\r\n\0");
 		
+		// send the contents of the file
 		char tempbuf[REQUEST_MAX];
 		int fileFd = fileno(f);
 
