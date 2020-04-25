@@ -372,5 +372,9 @@
     - sliding window moves when ack recieved
     - reciever drops after missing packet
       - sender will resend N packets after missing packet
+    - uses 1 timer, but stores timestamps of all packets
   - selective repeat
     - send individual ack
+    - sender window buffer
+      - supports out of order packets
+      - cost is more memory

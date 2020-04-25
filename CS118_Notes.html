@@ -6,8 +6,8 @@
 <link rel="stylesheet" href="https://gitcdn.xyz/repo/goessner/mdmath/master/css/vscode-texmath.css">
 
 </head><body>
-<h1 id="cs118-3" data-line="0" class="code-line">CS118</h1>
-<h2 id="introduction-3" data-line="2" class="code-line">Introduction</h2>
+<h1 id="cs118-1" data-line="0" class="code-line">CS118</h1>
+<h2 id="introduction-1" data-line="2" class="code-line">Introduction</h2>
 <ul>
 <li data-line="4" class="code-line">Become an <em>internet developer</em></li>
 <li data-line="5" class="code-line">4 quizzes (60%)
@@ -27,7 +27,7 @@
 </li>
 <li data-line="12" class="code-line">weekly homework (20%)</li>
 </ul>
-<h2 id="overview-of-internet-3" data-line="14" class="code-line">Overview of internet</h2>
+<h2 id="overview-of-internet-1" data-line="14" class="code-line">Overview of internet</h2>
 <ul>
 <li data-line="16" class="code-line">web is geographically divided across different internet service providers (ISPs)</li>
 <li data-line="17" class="code-line">3 types of hardware components
@@ -45,7 +45,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="network-edge-3" data-line="26" class="code-line">Network edge</h2>
+<h2 id="network-edge-1" data-line="26" class="code-line">Network edge</h2>
 <ul>
 <li data-line="28" class="code-line">different access networks
 <ul>
@@ -83,7 +83,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="network-core-3" data-line="43" class="code-line">Network core</h2>
+<h2 id="network-core-1" data-line="43" class="code-line">Network core</h2>
 <ul>
 <li data-line="45" class="code-line">mesh of interconnected routers</li>
 <li data-line="46" class="code-line">routing: determines source-destination route taken by packets</li>
@@ -143,7 +143,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="delay-and-loss-3" data-line="82" class="code-line">Delay and Loss</h2>
+<h2 id="delay-and-loss-1" data-line="82" class="code-line">Delay and Loss</h2>
 <ul>
 <li data-line="84" class="code-line">packet delay = time to transmit packet = <eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>L</mi><mi mathvariant="normal">/</mi><mi>R</mi></mrow><annotation encoding="application/x-tex">L/R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">L</span><span class="mord">/</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span></span></span></span></eq></li>
 <li data-line="85" class="code-line">end-end delay = <eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mi>L</mi><mi mathvariant="normal">/</mi><mi>R</mi></mrow><annotation encoding="application/x-tex">2L/R</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mord mathdefault">L</span><span class="mord">/</span><span class="mord mathdefault" style="margin-right:0.00773em;">R</span></span></span></span></eq>
@@ -195,7 +195,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="protocols-3" data-line="107" class="code-line">Protocols</h2>
+<h2 id="protocols-1" data-line="107" class="code-line">Protocols</h2>
 <ul>
 <li data-line="109" class="code-line">format, order of message, action</li>
 <li data-line="110" class="code-line">building block for network software</li>
@@ -224,7 +224,7 @@
 </ul>
 </li>
 </ul>
-<h2 id="application-architectures-3" data-line="124" class="code-line">Application architectures</h2>
+<h2 id="application-architectures-1" data-line="124" class="code-line">Application architectures</h2>
 <ul>
 <li data-line="126" class="code-line">client-server model
 <ul>
@@ -252,55 +252,425 @@
 </ul>
 </li>
 </ul>
-<h2 id="addressing-processes-3" data-line="140" class="code-line">Addressing processes</h2>
+<h2 id="addressing-processes-1" data-line="140" class="code-line">Addressing processes</h2>
 <ul>
-<li data-line="141" class="code-line">hosts have unique 32-bit IP address to identify
+<li data-line="142" class="code-line">hosts have unique 32-bit IP address to identify
 <ul>
-<li data-line="142" class="code-line">ex. 172.217.1.36</li>
+<li data-line="143" class="code-line">ex. 172.217.1.36</li>
 </ul>
 </li>
-<li data-line="143" class="code-line">different processes on a host are indicated by port numbers
+<li data-line="144" class="code-line">different processes on a host are indicated by port numbers
 <ul>
-<li data-line="144" class="code-line">ex. port 80 for http server, port 25 for mail server</li>
+<li data-line="145" class="code-line">ex. port 80 for http server, port 25 for mail server</li>
 </ul>
 </li>
-<li data-line="145" class="code-line">OS knows when messages come into a port, it can send the message to the corresponding process</li>
+<li data-line="146" class="code-line">OS knows when messages come into a port, it can send the message to the corresponding process</li>
 </ul>
-<h2 id="tcp-vs-udp-3" data-line="147" class="code-line">TCP vs UDP</h2>
+<h2 id="tcp-vs-udp-1" data-line="148" class="code-line">TCP vs UDP</h2>
 <ul>
-<li data-line="148" class="code-line">depends on application's needs
+<li data-line="150" class="code-line">depends on application's needs
 <ul>
-<li data-line="149" class="code-line">data integrity; some apps can tolerate loss</li>
-<li data-line="150" class="code-line">timing/latency</li>
-<li data-line="151" class="code-line">throughput</li>
-<li data-line="152" class="code-line">security</li>
-</ul>
-</li>
-<li data-line="153" class="code-line">TCP tries to provide everything
-<ul>
-<li data-line="154" class="code-line">reliable transport, flow control, congestion throttle</li>
-<li data-line="155" class="code-line">requires client/server to setup connection</li>
-<li data-line="156" class="code-line">does not provide security</li>
+<li data-line="151" class="code-line">data integrity; some apps can tolerate loss</li>
+<li data-line="152" class="code-line">timing/latency</li>
+<li data-line="153" class="code-line">throughput</li>
+<li data-line="154" class="code-line">security</li>
 </ul>
 </li>
-<li data-line="157" class="code-line">UDP is generally worse than TCP
+<li data-line="155" class="code-line">TCP tries to provide everything
 <ul>
-<li data-line="158" class="code-line">does not provide the benefits that TCP has</li>
-<li data-line="159" class="code-line">also does not provide security</li>
-<li data-line="160" class="code-line">but it is faster because less overhead</li>
+<li data-line="156" class="code-line">reliable transport, flow control, congestion throttle</li>
+<li data-line="157" class="code-line">requires client/server to setup connection</li>
+<li data-line="158" class="code-line">does not provide security</li>
+</ul>
+</li>
+<li data-line="159" class="code-line">UDP is generally worse than TCP
+<ul>
+<li data-line="160" class="code-line">does not provide the benefits that TCP has</li>
+<li data-line="161" class="code-line">also does not provide security</li>
+<li data-line="162" class="code-line">but it is faster because less overhead</li>
 </ul>
 </li>
 </ul>
-<h2 id="web-and-http-3" data-line="162" class="code-line">Web and HTTP</h2>
+<h2 id="web-and-http-1" data-line="164" class="code-line">Web and HTTP</h2>
 <ul>
-<li data-line="163" class="code-line">client-server model</li>
-<li data-line="164" class="code-line">the browser is the client
+<li data-line="166" class="code-line">client-server model</li>
+<li data-line="167" class="code-line">the browser is the client
 <ul>
-<li data-line="165" class="code-line">webpage is made up of objects such as HTML, image, applet, video</li>
-<li data-line="166" class="code-line">sends URL in form [host] [path] to the web server</li>
+<li data-line="168" class="code-line">webpage is made up of objects such as HTML, image, applet, video</li>
+<li data-line="169" class="code-line">sends URL in form [host][path] to the web server</li>
 </ul>
 </li>
-<li data-line="167" class="code-line">web server is hosted</li>
+<li data-line="170" class="code-line">web server is hosted at port 80 always</li>
+<li data-line="171" class="code-line">non-persistent HTTP (1.0)
+<ul>
+<li data-line="172" class="code-line">algorithm
+<ul>
+<li data-line="173" class="code-line">1 request to setup TCP connection</li>
+<li data-line="174" class="code-line">1 request for each referenced object (by URL)</li>
+<li data-line="175" class="code-line">closes connection after recieving object</li>
+<li data-line="176" class="code-line">parses html response and decides if subsequent requests are neeeded</li>
+</ul>
+</li>
+<li data-line="177" class="code-line">time is <eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mo>∗</mo><mi>t</mi><mi>i</mi><mi>m</mi><msub><mi>e</mi><mrow><mi>r</mi><mi>o</mi><mi>u</mi><mi>n</mi><mi>d</mi></mrow></msub></mrow><annotation encoding="application/x-tex">2*time_{round}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.80952em;vertical-align:-0.15em;"></span><span class="mord mathdefault">t</span><span class="mord mathdefault">i</span><span class="mord mathdefault">m</span><span class="mord"><span class="mord mathdefault">e</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.33610799999999996em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight" style="margin-right:0.02778em;">r</span><span class="mord mathdefault mtight">o</span><span class="mord mathdefault mtight">u</span><span class="mord mathdefault mtight">n</span><span class="mord mathdefault mtight">d</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq></li>
+<li data-line="178" class="code-line">can be parallelized at the cost of OS resources</li>
+</ul>
+</li>
+<li data-line="179" class="code-line">persistent HTTP (1.1)
+<ul>
+<li data-line="180" class="code-line">keeps the TCP connection open for multiple messages</li>
+<li data-line="181" class="code-line">closes connection if inactive</li>
+</ul>
+</li>
+<li data-line="182" class="code-line">example: webpage with 10 refence object
+<ul>
+<li data-line="183" class="code-line"><eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mi>T</mi></mrow><annotation encoding="application/x-tex">2T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span></eq> <em>is used because every message needs to go to server and back</em></li>
+<li data-line="184" class="code-line">non-persistent HTTP <eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mi>T</mi><mo>∗</mo><mn>2</mn><mo>∗</mo><mi>T</mi><mo>∗</mo><mn>10</mn><mo>=</mo><mn>22</mn><mi>T</mi></mrow><annotation encoding="application/x-tex">2T * 2*T*10 = 22T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord">2</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span></eq></li>
+<li data-line="185" class="code-line">persistent HTTP <eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mi>T</mi><mo>∗</mo><mi>T</mi><mo>∗</mo><mn>10</mn><mo>=</mo><mn>12</mn><mi>T</mi></mrow><annotation encoding="application/x-tex">2T * T*10 = 12T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">0</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">1</span><span class="mord">2</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span></eq></li>
+<li data-line="186" class="code-line">paralled non-persistent HTTP <eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mn>2</mn><mi>T</mi><mo>∗</mo><mn>2</mn><mo>∗</mo><mi>T</mi></mrow><annotation encoding="application/x-tex">2T * 2*T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">2</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.64444em;vertical-align:0em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span></eq> (for the first 5) <eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>+</mo><mn>2</mn><mo>∗</mo><mi>T</mi></mrow><annotation encoding="application/x-tex">+2*T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.72777em;vertical-align:-0.08333em;"></span><span class="mord">+</span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">∗</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span></eq> (for the next 5) <eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mo>=</mo><mn>6</mn><mi>T</mi></mrow><annotation encoding="application/x-tex">= 6T</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.36687em;vertical-align:0em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord">6</span><span class="mord mathdefault" style="margin-right:0.13889em;">T</span></span></span></span></eq></li>
+</ul>
+</li>
+<li data-line="187" class="code-line">HTTP message
+<ul>
+<li data-line="188" class="code-line">request
+<ul>
+<li data-line="189" class="code-line">request line with GET/POST and the desired object</li>
+<li data-line="190" class="code-line">header lines with parameters such as browser, host, encoding, idle time</li>
+<li data-line="191" class="code-line">body</li>
+<li data-line="192" class="code-line">encoded into smaller form</li>
+</ul>
+</li>
+<li data-line="193" class="code-line">response
+<ul>
+<li data-line="194" class="code-line">status line (200, 400, 404, 505, etc)</li>
+<li data-line="195" class="code-line">header lines with parameters such as local time, server OS, last modified, length, type</li>
+<li data-line="196" class="code-line">requested data in body</li>
+</ul>
+</li>
+<li data-line="197" class="code-line">HTTP 1.0
+<ul>
+<li data-line="198" class="code-line">GET, POST (sends input data), HEAD (doesn't need object)</li>
+</ul>
+</li>
+<li data-line="199" class="code-line">HTTP 1.1
+<ul>
+<li data-line="200" class="code-line">all of HTTP 1.0</li>
+<li data-line="201" class="code-line">PUT (sends entire file to server)</li>
+<li data-line="202" class="code-line">DELETE</li>
+</ul>
+</li>
+<li data-line="203" class="code-line">HTTP 2.0
+<ul>
+<li data-line="204" class="code-line">designed for throughput connections</li>
+<li data-line="205" class="code-line">multiplexing streams over one connection</li>
+<li data-line="206" class="code-line">request-response pipelining</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-line="207" class="code-line">stateless HTTP
+<ul>
+<li data-line="208" class="code-line">server cannot infer whether the client visits before the request is sent</li>
+<li data-line="209" class="code-line">modern applications like Amazon have workarounds such as cookies
+<ul>
+<li data-line="210" class="code-line">store ids in the local web browser and send in request</li>
+<li data-line="211" class="code-line">Amazon stores your id in their database</li>
+<li data-line="212" class="code-line">cost is user privacy</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-line="213" class="code-line">web caches to improve response time
+<ul>
+<li data-line="214" class="code-line">maintained by ISPs</li>
+<li data-line="215" class="code-line">proxy server closer to client, reduces propagation delay</li>
+<li data-line="216" class="code-line">cache information for popular webpages</li>
+<li data-line="217" class="code-line">conditional get
+<ul>
+<li data-line="218" class="code-line">server only sends new object is it has been updated</li>
+<li data-line="219" class="code-line">use last modified time</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="email-1" data-line="221" class="code-line">Email</h2>
+<ul>
+<li data-line="223" class="code-line">user agents (clients)
+<ul>
+<li data-line="224" class="code-line">composing/reading email</li>
+</ul>
+</li>
+<li data-line="225" class="code-line">mail server
+<ul>
+<li data-line="226" class="code-line">maintains a mailbox for each user</li>
+<li data-line="227" class="code-line">message queue of outgoing mails</li>
+</ul>
+</li>
+<li data-line="228" class="code-line">SMTP
+<ul>
+<li data-line="229" class="code-line">&quot;push&quot; rather than HTTP pull</li>
+<li data-line="230" class="code-line">ASCII for everything</li>
+<li data-line="231" class="code-line">persistent connections</li>
+</ul>
+</li>
+<li data-line="232" class="code-line">mail access protocol
+<ul>
+<li data-line="233" class="code-line">POP: post office protocol</li>
+<li data-line="234" class="code-line">IMAP: internet mail access protocol</li>
+<li data-line="235" class="code-line">HTTP: gmail, office365</li>
+</ul>
+</li>
+</ul>
+<h2 id="domain-name-system-dns-1" data-line="237" class="code-line">Domain Name System (DNS)</h2>
+<ul>
+<li data-line="239" class="code-line">given the host name find the IP address</li>
+<li data-line="240" class="code-line">DNS services
+<ul>
+<li data-line="241" class="code-line">users need readable names</li>
+<li data-line="242" class="code-line">routers need IP addresses</li>
+<li data-line="243" class="code-line">host aliasing, mail server aliasing, load distribution</li>
+</ul>
+</li>
+<li data-line="244" class="code-line">must be a distributed database
+<ul>
+<li data-line="245" class="code-line">traffic volume extremely high</li>
+<li data-line="246" class="code-line">centralized system doesn't scale</li>
+</ul>
+</li>
+<li data-line="247" class="code-line">hierarchy design concept
+<ul>
+<li data-line="248" class="code-line">host names must be hierarchical
+<ul>
+<li data-line="249" class="code-line"><code>kiwi.cs.ucla.edu</code></li>
+<li data-line="250" class="code-line">hierarchy from right to left</li>
+</ul>
+</li>
+<li data-line="251" class="code-line">each name server handles part of hierarchy
+<ul>
+<li data-line="252" class="code-line">abstracted from other layers</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-line="253" class="code-line">example <code>www.amazon.com</code>
+<ul>
+<li data-line="254" class="code-line">query root server to find com DNS</li>
+<li data-line="255" class="code-line">query .com DNS server to get <a href="http://amazon.com" data-href="http://amazon.com">amazon.com</a></li>
+<li data-line="256" class="code-line">query <a href="http://amazon.com" data-href="http://amazon.com">amazon.com</a> DNS server to get IP address for <a href="http://www.amazon.com" data-href="http://www.amazon.com">www.amazon.com</a></li>
+</ul>
+</li>
+<li data-line="257" class="code-line">different DNS servers
+<ul>
+<li data-line="258" class="code-line">root name servers
+<ul>
+<li data-line="259" class="code-line">only 13 total</li>
+<li data-line="260" class="code-line">returns mapping to local name server</li>
+</ul>
+</li>
+<li data-line="261" class="code-line">authorative DNS server
+<ul>
+<li data-line="262" class="code-line">maintained by the organization and provide their own hostname to IP mappings</li>
+</ul>
+</li>
+<li data-line="263" class="code-line">local DNS server/default name server
+<ul>
+<li data-line="264" class="code-line">ex. CS department server</li>
+<li data-line="265" class="code-line">if response is cached, it may return translation</li>
+<li data-line="266" class="code-line">otherwise forwards request through the hierarchy</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-line="267" class="code-line">iterated query (default)
+<ul>
+<li data-line="268" class="code-line">&quot;i don't know the name, but ask this server&quot;</li>
+<li data-line="269" class="code-line">local DNS server takes burden</li>
+</ul>
+</li>
+<li data-line="270" class="code-line">recursive query
+<ul>
+<li data-line="271" class="code-line">higher-level servers provide answers on behalf</li>
+<li data-line="272" class="code-line">puts heavy load on upper levels</li>
+</ul>
+</li>
+<li data-line="273" class="code-line">DNS caches
+<ul>
+<li data-line="274" class="code-line">at every level, cache some results</li>
+<li data-line="275" class="code-line">cache entries timeout and are removed</li>
+<li data-line="276" class="code-line">update/notify mechanisms are in place to indicate outdated cache entries</li>
+</ul>
+</li>
+<li data-line="277" class="code-line">DNS protocol uses UDP for both query and reply messages (sync via message ID)</li>
+</ul>
+<h2 id="p2p-applications-1" data-line="279" class="code-line">P2P applications</h2>
+<ul>
+<li data-line="281" class="code-line">end systems can directly communicate</li>
+<li data-line="282" class="code-line">file distribution client-server
+<ul>
+<li data-line="283" class="code-line"><eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mi>F</mi><mi mathvariant="normal">/</mi><msub><mi>u</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">NF/u_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord">/</span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq> is the time to send N copies sequentially</li>
+<li data-line="284" class="code-line"><eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>F</mi><mi mathvariant="normal">/</mi><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub></mrow><annotation encoding="application/x-tex">F/d_{min}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord">/</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">m</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq> is the time for a client to download</li>
+<li data-line="285" class="code-line"><eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>D</mi><mrow><mi>c</mi><mo>−</mo><mi>s</mi></mrow></msub><mo>≥</mo><mi>m</mi><mi>a</mi><mi>x</mi><mo stretchy="false">{</mo><mi>N</mi><mi>F</mi><mi mathvariant="normal">/</mi><msub><mi>u</mi><mi>s</mi></msub><mo separator="true">,</mo><mi>F</mi><mi mathvariant="normal">/</mi><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">D_{c-s}\geq max\{NF/u_s,F/d_{min}\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.891661em;vertical-align:-0.208331em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.25833100000000003em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">c</span><span class="mbin mtight">−</span><span class="mord mathdefault mtight">s</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.208331em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">a</span><span class="mord mathdefault">x</span><span class="mopen">{</span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord">/</span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord">/</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">m</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">}</span></span></span></span></eq></li>
+<li data-line="286" class="code-line">distribution time is proportional to number of clients</li>
+</ul>
+</li>
+<li data-line="287" class="code-line">file distribution p2p
+<ul>
+<li data-line="288" class="code-line"><eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mi>F</mi><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><msub><mi>u</mi><mi>s</mi></msub><mo>+</mo><mi>S</mi><msub><mi>u</mi><mi>i</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">NF/(u_s+Su_i)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord">/</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span></eq> for the client to download <eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>N</mi><mi>F</mi></mrow><annotation encoding="application/x-tex">NF</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.68333em;vertical-align:0em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span></span></span></span></eq> bits total from peers with added service capacity <eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><mi>S</mi><msub><mi>u</mi><mi>i</mi></msub></mrow><annotation encoding="application/x-tex">Su_i</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.83333em;vertical-align:-0.15em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span></eq></li>
+<li data-line="289" class="code-line"><eq><span class="katex"><span class="katex-mathml"><math><semantics><mrow><msub><mi>D</mi><mrow><mi>p</mi><mn>2</mn><mi>p</mi></mrow></msub><mo>≥</mo><mi>m</mi><mi>a</mi><mi>x</mi><mo stretchy="false">{</mo><mi>F</mi><mi mathvariant="normal">/</mi><msub><mi>u</mi><mi>s</mi></msub><mo separator="true">,</mo><mi>F</mi><mi mathvariant="normal">/</mi><msub><mi>d</mi><mrow><mi>m</mi><mi>i</mi><mi>n</mi></mrow></msub><mo separator="true">,</mo><mi>N</mi><mi>F</mi><mi mathvariant="normal">/</mi><mo stretchy="false">(</mo><msub><mi>u</mi><mi>s</mi></msub><mo>+</mo><mi>S</mi><msub><mi>u</mi><mi>i</mi></msub><mo stretchy="false">)</mo><mo stretchy="false">}</mo></mrow><annotation encoding="application/x-tex">D_{p2p}\geq max\{F/u_s,F/d_{min},NF/(u_s+Su_i)\}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.969438em;vertical-align:-0.286108em;"></span><span class="mord"><span class="mord mathdefault" style="margin-right:0.02778em;">D</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.301108em;"><span style="top:-2.5500000000000003em;margin-left:-0.02778em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">p</span><span class="mord mtight">2</span><span class="mord mathdefault mtight">p</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.286108em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2777777777777778em;"></span><span class="mrel">≥</span><span class="mspace" style="margin-right:0.2777777777777778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault">m</span><span class="mord mathdefault">a</span><span class="mord mathdefault">x</span><span class="mopen">{</span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord">/</span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord">/</span><span class="mord"><span class="mord mathdefault">d</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathdefault mtight">m</span><span class="mord mathdefault mtight">i</span><span class="mord mathdefault mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.16666666666666666em;"></span><span class="mord mathdefault" style="margin-right:0.10903em;">N</span><span class="mord mathdefault" style="margin-right:0.13889em;">F</span><span class="mord">/</span><span class="mopen">(</span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.151392em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222222222222222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222222222222222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathdefault" style="margin-right:0.05764em;">S</span><span class="mord"><span class="mord mathdefault">u</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.31166399999999994em;"><span style="top:-2.5500000000000003em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathdefault mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mclose">}</span></span></span></span></eq></li>
+<li data-line="290" class="code-line">distribution time grows slower as N increases</li>
+</ul>
+</li>
+<li data-line="291" class="code-line">bittorrent</li>
+</ul>
+<h2 id="content-distribution-networks-1" data-line="293" class="code-line">Content distribution networks</h2>
+<ul>
+<li data-line="295" class="code-line">challenges of scale and heterogeneity</li>
+<li data-line="296" class="code-line">video formats
+<ul>
+<li data-line="297" class="code-line">transmitted as a sequence of images</li>
+<li data-line="298" class="code-line">coding uses redundancy within and between images to compress image (MPEG4)</li>
+</ul>
+</li>
+<li data-line="299" class="code-line">dynamic adaptive streaming over HTTP (DASH)
+<ul>
+<li data-line="300" class="code-line">server divides video into chunks, encoded and stored at different rates</li>
+<li data-line="301" class="code-line">manifest file contains URL for each chunk</li>
+<li data-line="302" class="code-line">client measures bandwidth and requests appropriate chunk, consulting the manifest</li>
+<li data-line="303" class="code-line">puts more intelligence on the client side</li>
+</ul>
+</li>
+<li data-line="304" class="code-line">store copies of the videos at different sites around the world
+<ul>
+<li data-line="305" class="code-line">client is directed to a nearby CDN</li>
+<li data-line="306" class="code-line">video hosting website will redirect you to the IP address of the CDN</li>
+</ul>
+</li>
+</ul>
+<h1 id="transport-layer-1" data-line="308" class="code-line">Transport layer</h1>
+<h2 id="transport-layer-services-1" data-line="310" class="code-line">Transport layer services</h2>
+<ul>
+<li data-line="312" class="code-line">logical communication between processes</li>
+<li data-line="313" class="code-line">send segments, not packets</li>
+</ul>
+<h2 id="mux-and-demux-1" data-line="315" class="code-line">MUX and DeMUX</h2>
+<ul>
+<li data-line="317" class="code-line">multiplexing combines data from multiple sockets at sender
+<ul>
+<li data-line="318" class="code-line">add headers to identify process</li>
+</ul>
+</li>
+<li data-line="319" class="code-line">demultiplexing is done on the reciever side
+<ul>
+<li data-line="320" class="code-line">IP datagram has source and dest IPs</li>
+<li data-line="321" class="code-line">port number identifies the process</li>
+<li data-line="322" class="code-line">connectionless demultiplexing
+<ul>
+<li data-line="323" class="code-line">all UDP segments with the same destination port number will be combined</li>
+<li data-line="324" class="code-line">only 1 application process to serve all requests</li>
+</ul>
+</li>
+<li data-line="325" class="code-line">connection oriented demux
+<ul>
+<li data-line="326" class="code-line">TCP socket identified by tuple of source/dest IP and ports</li>
+<li data-line="327" class="code-line">server can support many simultaneous TCP sockets</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<h2 id="connectionless-transport-udp-1" data-line="329" class="code-line">Connectionless transport: UDP</h2>
+<ul>
+<li data-line="331" class="code-line">low overhead, barebones protocol</li>
+<li data-line="332" class="code-line">segments may be lost or delivered out of order</li>
+<li data-line="333" class="code-line">each segment is handled independently</li>
+<li data-line="334" class="code-line">checksum to detect transmission errors
+<ul>
+<li data-line="335" class="code-line">convert contents to ints and add with 1's complement</li>
+<li data-line="336" class="code-line">reciever recomputes checksum and compares</li>
+<li data-line="337" class="code-line">checksum may let errors pass through</li>
+</ul>
+</li>
+<li data-line="338" class="code-line">usage
+<ul>
+<li data-line="339" class="code-line">streaming, DNS, SNMP</li>
+</ul>
+</li>
+</ul>
+<h2 id="reliable-data-transfer-1" data-line="341" class="code-line">Reliable data transfer</h2>
+<ul>
+<li data-line="343" class="code-line">making reliable services over an unreliable channel</li>
+<li data-line="344" class="code-line">formalized using finite state machines</li>
+<li data-line="345" class="code-line">rdt1.0: channel is reliable</li>
+<li data-line="346" class="code-line">rdt2.0: channel can have errors
+<ul>
+<li data-line="347" class="code-line">use checksum to determine if the packet was corrupted</li>
+<li data-line="348" class="code-line">reciever gives sender ACK if good</li>
+<li data-line="349" class="code-line">reciever give sender NAK if errors, sender retransmits</li>
+</ul>
+</li>
+<li data-line="350" class="code-line">rdt2.1: sequence numbers
+<ul>
+<li data-line="351" class="code-line">what if the ACK/NAK message is corrupted? should sender retransmit or drop?</li>
+<li data-line="352" class="code-line">add unique (sequence #) id on the sender side so the reciever know whether they are sent a duplicate or next packet</li>
+<li data-line="353" class="code-line">2 sequence numbers is enough to handle corrupted bits
+<ul>
+<li data-line="354" class="code-line">rotate between 0 and 1</li>
+<li data-line="355" class="code-line">interpretation of ACK/NAK depends on previous state</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-line="356" class="code-line">rdt2.2: only ACK
+<ul>
+<li data-line="357" class="code-line">reciever will send ACK for the last correctly recieved packet</li>
+<li data-line="358" class="code-line">duplicate ACK = NAK
+<ul>
+<li data-line="359" class="code-line">if server sent pck1 but reciever sends back ack0, that means NAK</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-line="360" class="code-line">rdt3.0: channels with errors and loss
+<ul>
+<li data-line="361" class="code-line">timer to wait for ack</li>
+<li data-line="362" class="code-line">if packet is lost, then makes sense to retransmit</li>
+<li data-line="363" class="code-line">if packet is delayed, duplicate will be sent but seq #'s handles</li>
+<li data-line="364" class="code-line">optimal timer
+<ul>
+<li data-line="365" class="code-line">large timer works but is slow, small timer can create interference</li>
+<li data-line="366" class="code-line">ideal timeout is slightly larger than past RTT</li>
+</ul>
+</li>
+</ul>
+</li>
+<li data-line="367" class="code-line">pipeline
+<ul>
+<li data-line="368" class="code-line">send multiple &quot;in-flight&quot; packets</li>
+<li data-line="369" class="code-line">amortize RTT across multiple packets</li>
+<li data-line="370" class="code-line">go-back-N
+<ul>
+<li data-line="371" class="code-line">sliding window moves when ack recieved</li>
+<li data-line="372" class="code-line">reciever drops after missing packet
+<ul>
+<li data-line="373" class="code-line">sender will resend N packets after missing packet</li>
+</ul>
+</li>
+<li data-line="374" class="code-line">uses 1 timer, but stores timestamps of all packets</li>
+</ul>
+</li>
+<li data-line="375" class="code-line">selective repeat
+<ul>
+<li data-line="376" class="code-line">send individual ack</li>
+<li data-line="377" class="code-line">sender window buffer
+<ul>
+<li data-line="378" class="code-line">supports out of order packets</li>
+<li data-line="379" class="code-line">cost is more memory</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>
 
 </body></html>
