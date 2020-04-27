@@ -19,6 +19,20 @@ b. The possible ACK values will be in the range of k-7 to k-1. If the reciever i
 
 ## Problem 4
 
+a. The sender will not be kept busy. 
+
+$Utilization = \frac{\frac{5*32000}{8*10^6}}{0.4+\frac{32*10^3}{8*10^6}}=0.45$
+
+$EffectiveThroughput=Utilization*8=3.6 Megabits/s$
+
+b. The minimum window size is 11 and this would use 4 bits.
+
+let $w$ be the window size
+
+$1=\frac{w*\frac{5*32000}{8*10^6}}{0.04+\frac{5*32000}{8*10^6}}$
+
+solving this for $w$ gives 11.
+
 ## Problem 5
 
 a. True. Assume the sender has a window size of 4 and sends packets 1, 2, 3, 4 at some time. At then the receiver ACKs 1-4. Shorly after, the timer runs out, so the sender
