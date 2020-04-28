@@ -20,6 +20,14 @@ d.
 
 ## Problem 2
 
+a. The required buffer size for GBN is 1 and 23 for SR.
+
+b.  
+
+i. SeqNumSize $= (N+M) = 6+3=9$
+
+ii. SeqNumSize $= (N+1) = 6+1 =7$
+
 ## Problem 3
 after the 106ms sample...
 - estRTT=$(1-.125)(100)+(0.125)(106)=100.75$
