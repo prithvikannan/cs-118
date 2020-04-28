@@ -373,8 +373,53 @@
     - reciever drops after missing packet
       - sender will resend N packets after missing packet
     - uses 1 timer, but stores timestamps of all packets
+    - discard out of order packets
   - selective repeat
     - send individual ack
     - sender window buffer
       - supports out of order packets
       - cost is more memory
+    - selective recovery
+
+## TCP
+
+- basics
+  - one sender one reciever
+  - reliable, in order byte stream
+  - pipelining 
+  - bi-directional data flow
+  - requires handshaking
+  - flow controlled
+- sequence numbers is byte stream index of the first byte of the segment data
+- acknowledgement number is the sequential number expected from the other side
+  - using cumulative ACK
+- timeout is set by probabalistic function of RTT
+  - $estRTT=(1-\alpha)*estRTT+\alpha*SampleRTT$ over a sample
+  - $devRTT = (1-\beta)*devRTT+\beta*(|SampleRTT-estRTT|)$
+  - $timeout = estRTT + 4*DevRTT$
+- sender events
+  - make a segment with sequence number and start a timer
+  - if timeout, retransmit and restart timer
+  - if ack, update what is know to be acked, timer for unACKed segments
+- fast retransmit
+  - if sender recieves 3 dup ACKs, resent unACKed segment with smallest seq #
+- flow control ensures buffers do not overflow
+  - reciever indicates how much free buffer they have in `rwnd` field and sender limits "in flight" data accordingly
+- handshake to establish parameters for communication
+  - 3 way handshake ensure both x and y can ack messages using `SYNbit`
+    - listen: SYN from x to y
+    - synset: SYNACK to ack SYN from y to x
+    - estab: ACK for SYNACK with client to server data
+  - close connection using `FINbit`
+    - client closes socket but can still recieve data, sends `FINbit=1` to server who ACKs
+    - server sends `FINbit=1` back to client who ACKs
+    - timeout of $2*maxSegmentLife$
+- congestion control 
+  - prevent overflowing the _network_ (flow control was about the _reciever_)
+  - can result in lost packets or long delays
+  - TCP congestion control follows implicit feedback, self clocking
+  - congestion window `cwnd`
+    - increased slowly for new bandwidth, decreased quickly for congestion
+    - sender limits transmission to $min($`cwnd,rwnd`$)$
+    - upon loss event (timeout or triple ACK), reduce `cwnd`
+  - additive increase, multiplicative decrease (AIMD)
