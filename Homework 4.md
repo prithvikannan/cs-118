@@ -50,4 +50,10 @@ b. If the timeouts are very long, then TCP will be the quickest protocol to deli
 
 ## Problem 5
 
+a. HTTP does not use any timers directly, but uses the TCP timers.
 
+b. DNS uses timers in the form of time to live (TTL) values, which is essentially an expiry date for a DNS record. Once that TTL has run out, then the record can be cleared from the cache. DNS communication is built on UDP, which does not use any timers.
+
+c. TCP uses a retransmission/timeout timer for managing acknowledgements. TCP also uses a timer for congestion management.
+
+d. UDP does not use timers because retransmission methods are written at the application layer instead. 
