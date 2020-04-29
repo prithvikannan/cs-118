@@ -42,7 +42,7 @@ after the 120ms sample...
 after the 150ms sample...
 - estRTT=$(1-.125)(103.15)+(0.125)(150)=109.00$
 - devRTT=$(1-.25)(8)+(0.25)|150-109|=16.25$
-- timeout=$109+4*16.25=174.50$
+- timeout=$109+4*16.25=174$
 
 ## Problem 4
 
