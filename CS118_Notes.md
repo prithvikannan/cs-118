@@ -366,7 +366,7 @@
     - large timer works but is slow, small timer can create interference
     - ideal timeout is slightly larger than past RTT
 - pipeline
-  - send multiple "in-flight" packets 
+  - send multiple "in-flight" packets
   - amortize RTT across multiple packets
   - go-back-N
     - sliding window moves when ack recieved
@@ -386,7 +386,7 @@
 - basics
   - one sender one reciever
   - reliable, in order byte stream
-  - pipelining 
+  - pipelining
   - bi-directional data flow
   - requires handshaking
   - flow controlled
@@ -414,12 +414,46 @@
     - client closes socket but can still recieve data, sends `FINbit=1` to server who ACKs
     - server sends `FINbit=1` back to client who ACKs
     - timeout of $2*maxSegmentLife$
-- congestion control 
-  - prevent overflowing the _network_ (flow control was about the _reciever_)
-  - can result in lost packets or long delays
-  - TCP congestion control follows implicit feedback, self clocking
-  - congestion window `cwnd`
-    - increased slowly for new bandwidth, decreased quickly for congestion
-    - sender limits transmission to $min($`cwnd,rwnd`$)$
-    - upon loss event (timeout or triple ACK), reduce `cwnd`
-  - additive increase, multiplicative decrease (AIMD)
+
+## Congestion control
+
+- prevent overflowing the _network_ (flow control was about the _reciever_)
+- can result in lost packets or long delays
+- TCP congestion control follows implicit feedback, self clocking
+- congestion window `cwnd`
+  - increased slowly for new bandwidth, decreased quickly for congestion
+  - sender limits transmission to $min($`cwnd,rwnd`$)$
+  - upon loss event (timeout or triple ACK), reduce `cwnd`
+- additive increase, multiplicative decrease (AIMD)
+  - TCP fairness is equal bandwidth to each connection
+  - additive increase maintains slope of 1
+  - multiplicative decrease bring closer to the line $y=x$
+    - equal bandwidth share line
+    - cutting half applies differently to connection 1 and 2
+
+## TCP implementation
+
+- slow start - _jumpstarts a new connection_
+  - when connection begins, set `cwnd=1MSS`
+  - aggressive increase via exponential
+    - `cwnd` doubles per RTT
+    - `cwnd+=1MSS` for every ACK
+    - ex. if 4 ACKs recieved, then `cwnd+=4MSS`
+  - stop at slow-start-threshold
+    - `ssthresh` initialization is set in OS (guess)
+    - on a loss event, set `ssthresh` to half of `cwnd` before the loss event
+- congestion avoidance
+  - linear increase when `cwnd>ssthresh` 
+    - `cwnd++` per RTT
+    - `cwnd+=(MSS/cwnd)*MSS` for every ACK
+- fast retransmit
+  - infer packet loss with 3 dup ACKs 
+    - 1-2 dup accounts for out-of-order case
+  - `ssthresh=max(cwnd/2, 2MSS)`
+  - `cwnd=ssthresh+3MSS`
+    - additional `3MSS` accounts for the triple ACK "delay factor"
+- fast recovery
+  - `cwnd+=1MSS` for every duplicate ACK
+  - indicates that the reciever got another packet
+- loss via duplicate ACK -> fast retransmit/fast recovery
+- loss via retransmission timeout -> reset all
