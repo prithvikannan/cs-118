@@ -63,4 +63,4 @@ $effective = RecieveWindow/RTT = 2^{16}B/400ms = 163.84 KB/s$
 
 ## Problem 5
 
-![image](./Resources/hw4_1.jpg)
+![image](./Resources/hw5_5.jpg)
