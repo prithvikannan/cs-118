@@ -24,17 +24,17 @@ control bits (all 6 bits): 010001
 
 a. 
 
-$LossRate = W/2 + (W/2 +1) + L + W$
+$LossRate = 1/ (W/2 + (W/2 +1) + L + W)$
 
-$= \sum_{n=0}^{W/2}(W/2+n)$
+$=1/ ( \sum_{n=0}^{W/2}(W/2+n))$
 
-$=(W/2 +1)W/2+\sum_{n=0}^{W/2}{n}$
+$=1/((W/2 +1)W/2+\sum_{n=0}^{W/2}{n})$
 
-$=(W/2 +1)W/2+\frac{W/2(W/2+1)}{2}$
+$=1/((W/2 +1)W/2+\frac{W/2(W/2+1)}{2})$
 
-$=W^2/4 +W/2+W^2/8+W/4$
+$=1/(W^2/4 +W/2+W^2/8+W/4)$
 
-$LossRate =3W^2/8 +3W/4$
+$LossRate =1/(3W^2/8 +3W/4)$
 
 b. For large W, $3W^2/8 >> 3W/4$ so $L\approx \frac{8}{3W^2}$
 
