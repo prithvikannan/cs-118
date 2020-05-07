@@ -455,5 +455,28 @@
 - fast recovery
   - `cwnd+=1MSS` for every duplicate ACK
   - indicates that the reciever got another packet
-- loss via duplicate ACK -> fast retransmit/fast recovery
-- loss via retransmission timeout -> reset all
+- loss event
+  - half cwnd 
+  - via duplicate ACK -> fast retransmit/fast recovery
+  - via retransmission timeout -> slow start
+
+# Network Layer
+
+## Overview of network layer
+- between transport and link layer
+
+## Routers
+
+## IP protocol
+- forwarding table
+- IP datagram: headers (inc. source and dest IP) and data
+  - IP protocol number (IPv4 or IPv6)
+  - TTL is max number of remaining hops
+    - drop packet when 0
+  - upper layer protocol (TCP or UDP)
+- lot of overhead
+  - \>20 bytes of IP headers
+  - 20 bytes of TCP headers
+- IP fragmentation
+  - split datagrams within net
+  - reassemble at the final destination 
