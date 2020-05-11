@@ -491,7 +491,7 @@
     - $buf=\frac{RTT*C}{\sqrt{N}}$
 - scheduling
   - FIFO, priority, RR
-  
+
 ## IP protocol
 - forwarding table
 - IP datagram: headers (inc. source and dest IP) and data
@@ -505,3 +505,36 @@
 - IP fragmentation
   - split datagrams within net
   - reassemble at the final destination 
+- IP address
+  - 32 bit identifier
+  - 4 8 bit parts separated by a period
+- subnets can reach each other without the router
+  - upper bits match 
+- classless interdomain routing (CIDR)
+  - `a.b.c.d/x`
+  - x is the subnet length (bits)
+- getting IP addresses
+  - hosts - dynamic host configuration protocol (DHCP)
+    - host dynamically gets IP address when connecting to network
+    - only hold address when on
+    - connection steps
+      - discover, offer, request, ACK
+  - networks
+    - portion of ISP address space 
+    - hierarchical addressing for efficiency
+  - ISP - ICANN 
+    - manages DNS
+- network address translation (NAT)
+  - datagrams leaving local network have same NAT IP
+  - datagrams within network have a local IP
+  - local network uses only one IP from the perspective of rest of network
+  - IPv4
+    - 24 bit `10.0.0.0`
+    - 20 bit `172.16.0.0`    
+    - 16 bit `192.168.0.0`
+- IPv6
+  - all addresses in 32-bit address sapce will be allocated
+  - fixed 40 byte header
+  - no fragmentation
+  - no checksum
+  - IPv6 carried as a payload in IPv4 routers
