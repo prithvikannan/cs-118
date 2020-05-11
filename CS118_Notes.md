@@ -464,9 +464,34 @@
 
 ## Overview of network layer
 - between transport and link layer
+- on the sender side encapsulates segments into datagrams
+- on the receiving side delivers segments to transport layer
+- forwarding - move packets between routers
+- routing - determining path from source to destination
 
 ## Routers
-
+- routing processor software for routing
+- high speed switching fabric hardware 
+- use header fields to lookup output port in fowarding table
+- destination based forwarding
+  - forwarding table of address range to link interface
+  - use longest prefix match of destination address
+- switching fabric
+  - memory
+    - copies packet and reads for output
+    - limited by memory speed
+  - bus
+    - send data over a shared bus
+    - limited by bus bandwidth
+  - interconnected network
+    - complex-shaped networks (banyan, crossbar, etc.)
+- queuing delay
+  - input: head of line blocking - datagram at front of queue prevents others in queue
+  - output: buffering to hold packets
+    - $buf=\frac{RTT*C}{\sqrt{N}}$
+- scheduling
+  - FIFO, priority, RR
+  
 ## IP protocol
 - forwarding table
 - IP datagram: headers (inc. source and dest IP) and data
