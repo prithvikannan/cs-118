@@ -460,7 +460,7 @@
   - via duplicate ACK -> fast retransmit/fast recovery
   - via retransmission timeout -> slow start
 
-# Network Layer
+# Network Layer: Data Plane
 
 ## Overview of network layer
 - between transport and link layer
@@ -538,3 +538,38 @@
   - no fragmentation
   - no checksum
   - IPv6 carried as a payload in IPv4 routers
+
+# Network Layer: Control Plane
+
+## Overview
+
+- goal is to determine a "good" path from sender to reciever through routers
+  - "good" is in terms of cost, speed, congestion
+- graph representations
+  - edges have costs representing bandwidth or congestion
+  - algorithm finds the least cost path
+
+## Routing protocols
+
+- link state - Dijkstra's algorithm
+  - link costs are known to all nodes (via a broadcast)
+  - compute least cost path from one node to all other nodes iteratively
+  - runtime is $O(n^2)$ or $O(nlogn)$ depending on implementation
+- distance vector - Bellman Ford
+  - dynamic programming
+  - $d_x(y) = min \{c(x,v) + d_v(y) \}$
+  - iterative: each local iteration is caused by local link cost or $d_v$ update
+  - distributed: each node notifies neighbors when $d_v$ changes
+- LS complexity and runtime is $O(nE)$ but DV varies
+- router malfunctions give bad link cost in LS, but bad path cost in DV
+
+## OSPF
+
+- group routers into _autonomous systems_ (AS)
+  - within the AS, same routing protocol used
+  - forwarding table is updated by intra-AS and inter-AS protocols
+- open shortest path first (OSPF)
+  - uses link state algorithm
+  - router sends advertisements to all routers in AS
+
+## BGP
