@@ -13,12 +13,12 @@ c. Yes, a crossbar will allow multiple packets simultaneously.
 
 ## Problem 2
 
-for 90 interfaces, need 7 bits \
 for 60 interfaces, need 6 bits \
+for 90 interfaces, need 7 bits \
 for 8 interfaces, need 3 bits
 
-subnet 1: `224.1.17.0/25` \
-subnet 2: `224.1.17.128/26` \
+subnet 1: `224.1.17.128/26` \
+subnet 2: `224.1.17.0/25` \
 subnet 3: `224.1.17.248/29` 
 
 ## Problem 3
@@ -30,8 +30,8 @@ b. fields
 id number = 421 \
 header length = 20
 total length = 800 for the first 3, 60 for the last \
-MF flag = 1 for the first 3, 1 for the last \
-offset = 0, 85, 170, 255 \
+MF flag = 1 for the first 3, 0 for the last \
+offset = 0, 85, 170, 255
 
 ## Problem 4
 
