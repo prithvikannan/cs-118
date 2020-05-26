@@ -572,4 +572,23 @@
   - uses link state algorithm
   - router sends advertisements to all routers in AS
 
-## BGP
+## Border Gateway Protocol (BGP)
+
+- eBGP: obtain subnet reachability information neighboring ASs 
+- iBGP: propagate reachability to AS-internal routers
+- messages between BGP routers in a session
+  - OPEN: opens TCP connection
+  - UPDATE: advertises new path (or withdraws old)
+  - KEEPALIVE: keeps connection alive if no update
+  - NOTIFICATION: reports errors, close connection
+- path vector protocol that advertises paths
+- path attributes
+  - prefix + attributes = route
+    - `AS-PATH` contains ASs through which the prefix passed
+    - `NEXT-HOP` says which internal AS router the next hop is
+- routing based on policy
+  1. local preference
+  2. shortest `AS-PATH`
+  3. closest `NEXT-HOP`
+
+## Internet control message protocol (ICMP)
