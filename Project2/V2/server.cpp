@@ -121,6 +121,12 @@ void hton_reorder(packet &pack)
 
 int create_socket(string port_num)
 {
+    if (stoi(port_num) <= 1023 && stoi(port_num) >= 0)
+    {
+        perror("ERROR: incorrect port number");
+        exit(1);
+    }
+
     struct addrinfo hints, *server_info, *anchor;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
@@ -164,6 +170,7 @@ int create_socket(string port_num)
     return sockfd;
 }
 
+// helper function when SYN is sent
 void handle_handshake(packet &buf, int sockfd, struct sockaddr client_addr, socklen_t client_addrlen)
 {
     for (int i = 0; i < MAX_CONNECTIONS; i++)
@@ -214,6 +221,7 @@ void handle_handshake(packet &buf, int sockfd, struct sockaddr client_addr, sock
     }
 }
 
+// helper function when ACK is sent
 void handle_ack(packet &buf, int sockfd, int data_size)
 {
     for (int i = 0; i < MAX_CONNECTIONS; i++)
@@ -277,6 +285,7 @@ void handle_ack(packet &buf, int sockfd, int data_size)
     }
 }
 
+// helper function when FIN is sent
 void handle_fin(packet &buf, int sockfd)
 {
     for (int i = 0; i < MAX_CONNECTIONS; i++)
@@ -351,12 +360,6 @@ int main(int argc, char *argv[])
     }
 
     port_num = argv[1];
-
-    if (stoi(port_num) <= 1023 && stoi(port_num) >= 0)
-    {
-        perror("ERROR: incorrect port number");
-        exit(1);
-    }
 
     // create socket
     int sockfd = create_socket(port_num);
