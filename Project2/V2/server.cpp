@@ -103,35 +103,24 @@ void print_packet(string message, packet buf)
     cout << message << " " << buf.pack_header.seq << " " << buf.pack_header.ack << " " << flag << endl;
 }
 
-packet convertByteOrder(connection_info input)
+void ntoh_reorder(packet &pack)
 {
-    packet buf = input.pack;
-    buf.pack_header.seq = htonl(input.pack.pack_header.seq);
-    buf.pack_header.ack = htonl(input.pack.pack_header.ack);
-    buf.pack_header.id = htons(input.pack.pack_header.id);
-    buf.pack_header.flags = htons(input.pack.pack_header.flags);
-    return buf;
+    pack.pack_header.ack = ntohl(pack.pack_header.ack);
+    pack.pack_header.seq = ntohl(pack.pack_header.seq);
+    pack.pack_header.id = ntohs(pack.pack_header.id);
+    pack.pack_header.flags = ntohs(pack.pack_header.flags);
 }
 
-int main(int argc, char *argv[])
+void hton_reorder(packet &pack)
 {
-    srand(time(NULL));
+    pack.pack_header.ack = htonl(pack.pack_header.ack);
+    pack.pack_header.seq = htonl(pack.pack_header.seq);
+    pack.pack_header.id = htons(pack.pack_header.id);
+    pack.pack_header.flags = htons(pack.pack_header.flags);
+}
 
-    signal(SIGQUIT, sig_handler);
-    signal(SIGTERM, sig_handler);
-    signal(SIGINT, sig_handler);
-
-    // create a socket using TCP IP
-    string port_num, file_dir;
-
-    port_num = argv[1];
-
-    if (stoi(port_num) <= 1023 && stoi(port_num) >= 0)
-    {
-        perror("ERROR: incorrect port number");
-        exit(1);
-    }
-
+int create_socket(string port_num)
+{
     struct addrinfo hints, *server_info, *anchor;
     memset(&hints, 0, sizeof(hints));
     hints.ai_family = AF_INET;
@@ -172,6 +161,206 @@ int main(int argc, char *argv[])
 
     freeaddrinfo(server_info);
 
+    return sockfd;
+}
+
+void handle_handshake(packet &buf, int sockfd, struct sockaddr client_addr, socklen_t client_addrlen)
+{
+    for (int i = 0; i < MAX_CONNECTIONS; i++)
+    {
+        if (all_connection[i].src_addr.sa_family != client_addr.sa_family)
+        {
+            if (all_connection[i].pack.pack_header.id == 0)
+            {
+                // setup file path
+                string file_path = to_string(i + 1) + ".file";
+                all_connection[i].myfile.open(file_path);
+
+                // set rand seq number, increment ack number, set flags
+                all_connection[i].pack.pack_header.seq = rand() % 25600;
+                all_connection[i].pack.pack_header.ack = buf.pack_header.seq + 1;
+                all_connection[i].pack.pack_header.flags = SYN_ACK;
+                all_connection[i].pack.pack_header.id = i + 1;
+                all_connection[i].src_addr = client_addr;
+                all_connection[i].addrlen = client_addrlen;
+
+                // prepare packet
+                buf.pack_header.seq = all_connection[i].pack.pack_header.seq;
+                buf.pack_header.ack = all_connection[i].pack.pack_header.ack;
+                buf.pack_header.id = all_connection[i].pack.pack_header.id;
+                buf.pack_header.flags = all_connection[i].pack.pack_header.flags;
+
+                // convert to network byte order
+                hton_reorder(buf);
+
+                // send packet
+                sendto(sockfd, &buf,
+                       sizeof(buf), 0,
+                       &all_connection[i].src_addr,
+                       all_connection[i].addrlen);
+
+                // log packet
+                print_packet("SEND", all_connection[i].pack);
+                break;
+            }
+        }
+        else
+        {
+            sendto(sockfd, &buf,
+                   sizeof(buf), 0,
+                   &all_connection[i].src_addr,
+                   all_connection[i].addrlen);
+        }
+    }
+}
+
+void handle_ack(packet &buf, int sockfd, int data_size)
+{
+    for (int i = 0; i < MAX_CONNECTIONS; i++)
+    {
+        if (buf.pack_header.id == all_connection[i].pack.pack_header.id)
+        { // find the connection
+            if (all_connection[i].is_FIN == 1)
+            { // connection has already been marked as FIN
+                all_connection[i].myfile.close();
+                break;
+            }
+            if (buf.pack_header.seq == all_connection[i].pack.pack_header.ack)
+            { // packet is in the correct order
+                all_connection[i].pack.pack_header.ack += data_size;
+                all_connection[i].pack.pack_header.ack %= 102401;
+
+                if (buf.pack_header.ack == all_connection[i].pack.pack_header.seq + 1)
+                { // packet is in order
+                    all_connection[i].pack.pack_header.seq++;
+                }
+
+                // write data to file
+                all_connection[i].myfile.write(buf.data, data_size);
+                all_connection[i].myfile.flush();
+            }
+            else
+            { // packet is out of order so drop
+
+                // log packet
+                print_packet("DROP", buf);
+
+                if (buf.pack_header.ack == all_connection[i].pack.pack_header.seq + 1)
+                { //packet sent to client is in order
+                    all_connection[i].pack.pack_header.seq++;
+                }
+            }
+
+            // set ACK flag
+            all_connection[i].pack.pack_header.flags = ACK;
+
+            // prepare packet
+            buf.pack_header.seq = all_connection[i].pack.pack_header.seq;
+            buf.pack_header.ack = all_connection[i].pack.pack_header.ack;
+            buf.pack_header.id = all_connection[i].pack.pack_header.id;
+            buf.pack_header.flags = all_connection[i].pack.pack_header.flags;
+
+            // convert network byte order
+            hton_reorder(buf);
+
+            // send packet
+            sendto(sockfd, &buf,
+                   sizeof(buf), 0,
+                   &all_connection[i].src_addr,
+                   all_connection[i].addrlen);
+
+            // log packet
+            print_packet("SEND", all_connection[i].pack);
+
+            break;
+        }
+    }
+}
+
+void handle_fin(packet &buf, int sockfd)
+{
+    for (int i = 0; i < MAX_CONNECTIONS; i++)
+    {
+        if (buf.pack_header.id == all_connection[i].pack.pack_header.id)
+        { // find the corresponding connection
+            if (buf.pack_header.seq == all_connection[i].pack.pack_header.ack)
+            { // packet is in order
+                all_connection[i].pack.pack_header.ack++;
+            }
+
+            // set ACK flag
+            all_connection[i].pack.pack_header.flags = ACK;
+
+            // prepare packet
+            buf.pack_header.seq = all_connection[i].pack.pack_header.seq;
+            buf.pack_header.ack = all_connection[i].pack.pack_header.ack;
+            buf.pack_header.id = all_connection[i].pack.pack_header.id;
+            buf.pack_header.flags = all_connection[i].pack.pack_header.flags;
+
+            // convert network byte order
+            hton_reorder(buf);
+
+            // send packet
+            sendto(sockfd, &buf,
+                   sizeof(buf), 0,
+                   &all_connection[i].src_addr,
+                   all_connection[i].addrlen);
+
+            // log packet
+            print_packet("SEND", all_connection[i].pack);
+
+            // set FIN flags
+            buf.pack_header.seq = all_connection[i].pack.pack_header.seq;
+            buf.pack_header.ack = 0;
+            buf.pack_header.id = all_connection[i].pack.pack_header.id;
+            buf.pack_header.flags = FIN;
+
+            // log packet
+            print_packet("SEND", buf);
+
+            // convert network byte order
+            hton_reorder(buf);
+
+            // send packet
+            sendto(sockfd, &buf,
+                   sizeof(buf), 0,
+                   &all_connection[i].src_addr,
+                   all_connection[i].addrlen);
+
+            // mark connectin as closed
+            all_connection[i].is_FIN = 1;
+            break;
+        }
+    }
+}
+
+int main(int argc, char *argv[])
+{
+    srand(time(NULL));
+
+    signal(SIGQUIT, sig_handler);
+    signal(SIGTERM, sig_handler);
+    signal(SIGINT, sig_handler);
+
+    string port_num, file_dir;
+
+    if (argc != 2)
+    {
+        perror("ERROR: incorrect number of arguments!");
+        exit(EXIT_FAILURE);
+    }
+
+    port_num = argv[1];
+
+    if (stoi(port_num) <= 1023 && stoi(port_num) >= 0)
+    {
+        perror("ERROR: incorrect port number");
+        exit(1);
+    }
+
+    // create socket
+    int sockfd = create_socket(port_num);
+
     struct sockaddr client_addr;
     socklen_t client_addrlen = 16;
     packet buf;
@@ -181,195 +370,24 @@ int main(int argc, char *argv[])
         memset(&buf, 0, sizeof(buf));
         int recv_byte = recvfrom(sockfd, &buf, sizeof(buf), 0, &client_addr, &client_addrlen);
         int data_size = recv_byte - 12;
-        // convert network byte order
-        buf.pack_header.seq = ntohl(buf.pack_header.seq);
-        buf.pack_header.id = ntohs(buf.pack_header.id);
-        buf.pack_header.ack = ntohl(buf.pack_header.ack);
-        buf.pack_header.flags = ntohs(buf.pack_header.flags);
+
+        // convert network to host byte order
+        ntoh_reorder(buf);
 
         // log packet
         print_packet("RECV", buf);
 
-        /*
-        SYN received
-        */
         if (buf.pack_header.flags == SYN)
-        {
-
-            for (int i = 0; i < MAX_CONNECTIONS; i++)
-            {
-                if (all_connection[i].src_addr.sa_family != client_addr.sa_family)
-                {
-                    if (all_connection[i].pack.pack_header.id == 0)
-                    {
-                        // setup file path
-                        string file_path = to_string(i + 1) + ".file";
-                        all_connection[i].myfile.open(file_path);
-
-                        // set rand seq number, increment ack number, set flags
-                        all_connection[i].pack.pack_header.seq = rand() % 25600;
-                        all_connection[i].pack.pack_header.ack = buf.pack_header.seq + 1;
-                        all_connection[i].pack.pack_header.flags = SYN_ACK;
-                        all_connection[i].pack.pack_header.id = i + 1;
-                        all_connection[i].src_addr = client_addr;
-                        all_connection[i].addrlen = client_addrlen;
-
-                        // convert to network byte order
-                        buf.pack_header.seq = htonl(all_connection[i].pack.pack_header.seq);
-                        buf.pack_header.ack = htonl(all_connection[i].pack.pack_header.ack);
-                        buf.pack_header.id = htons(all_connection[i].pack.pack_header.id);
-                        buf.pack_header.flags = htons(all_connection[i].pack.pack_header.flags);
-
-                        // send packet
-                        sendto(sockfd, &buf,
-                               sizeof(buf), 0,
-                               &all_connection[i].src_addr,
-                               all_connection[i].addrlen);
-
-                        // log packet
-                        print_packet("SEND", all_connection[i].pack);
-                        break;
-                    }
-                }
-                else
-                {
-                    sendto(sockfd, &buf,
-                           sizeof(buf), 0,
-                           &all_connection[i].src_addr,
-                           all_connection[i].addrlen);
-                }
-            }
+        { // SYN received
+            handle_handshake(buf, sockfd, client_addr, client_addrlen);
         }
-        /*
-        ACK received
-        */
         else if (buf.pack_header.flags == ACK || buf.pack_header.flags == 0)
-        {
-
-            for (int i = 0; i < MAX_CONNECTIONS; i++)
-            {
-                if (buf.pack_header.id == all_connection[i].pack.pack_header.id)
-                { // find the connection
-                    if (all_connection[i].is_FIN == 1)
-                    { // connection has already been marked as FIN
-                        all_connection[i].myfile.close();
-                        break;
-                    }
-                    if (buf.pack_header.seq == all_connection[i].pack.pack_header.ack)
-                    { // packet is in the correct order
-                        all_connection[i].pack.pack_header.ack += data_size;
-                        all_connection[i].pack.pack_header.ack %= 102401;
-
-                        if (buf.pack_header.ack == all_connection[i].pack.pack_header.seq)
-                        { // packet to client is lost
-                        }
-                        else if (buf.pack_header.ack == all_connection[i].pack.pack_header.seq + 1)
-                        { // packet is in order
-                            all_connection[i].pack.pack_header.seq++;
-                        }
-
-                        // write data to file
-                        all_connection[i].myfile.write(buf.data, data_size);
-                        all_connection[i].myfile.flush();
-                    }
-                    else
-                    { // packet is out of order so drop
-
-                        // log packet
-                        print_packet("DROP", buf);
-
-                        if (buf.pack_header.ack == all_connection[i].pack.pack_header.seq)
-                        { // packet to client is lost
-                        }
-                        else if (buf.pack_header.ack == all_connection[i].pack.pack_header.seq + 1)
-                        { //packet sent to client is in order
-                            all_connection[i].pack.pack_header.seq++;
-                        }
-                    }
-                    
-                    // set ACK flag
-                    all_connection[i].pack.pack_header.flags = ACK;
-
-                    // convert network byte order
-                    buf.pack_header.seq = htonl(all_connection[i].pack.pack_header.seq);
-                    buf.pack_header.ack = htonl(all_connection[i].pack.pack_header.ack);
-                    buf.pack_header.id = htons(all_connection[i].pack.pack_header.id);
-                    buf.pack_header.flags = htons(all_connection[i].pack.pack_header.flags);
-
-                    // send packet
-                    sendto(sockfd, &buf,
-                           sizeof(buf), 0,
-                           &all_connection[i].src_addr,
-                           all_connection[i].addrlen);
-
-                    // log packet
-                    print_packet("SEND", all_connection[i].pack);
-
-                    break;
-                }
-            }
+        { // ACK received
+            handle_ack(buf, sockfd, data_size);
         }
-        /*
-        FIN RECEIVED
-        */
         else if (buf.pack_header.flags == FIN)
-        {
-            for (int i = 0; i < MAX_CONNECTIONS; i++)
-            {
-                if (buf.pack_header.id == all_connection[i].pack.pack_header.id)
-                { // find the corresponding connection
-                    if (buf.pack_header.seq == all_connection[i].pack.pack_header.ack)
-                    { // packet is in order
-                        all_connection[i].pack.pack_header.ack++;
-                    }
-                    else
-                    { // packet is out of order, drop
-                    }
-
-                    // set ACK flag
-                    all_connection[i].pack.pack_header.flags = ACK;
-
-                    // convert network byte order
-                    buf.pack_header.seq = htonl(all_connection[i].pack.pack_header.seq);
-                    buf.pack_header.ack = htonl(all_connection[i].pack.pack_header.ack);
-                    buf.pack_header.id = htons(all_connection[i].pack.pack_header.id);
-                    buf.pack_header.flags = htons(all_connection[i].pack.pack_header.flags);
-
-                    // send packet
-                    sendto(sockfd, &buf,
-                           sizeof(buf), 0,
-                           &all_connection[i].src_addr,
-                           all_connection[i].addrlen);
-
-                    // log packet
-                    print_packet("SEND", all_connection[i].pack);
-
-                    // set FIN flags
-                    buf.pack_header.seq = all_connection[i].pack.pack_header.seq;
-                    buf.pack_header.ack = 0;
-                    buf.pack_header.id = all_connection[i].pack.pack_header.id;
-                    buf.pack_header.flags = FIN;
-
-                    // log packet
-                    print_packet("SEND", buf);
-
-                    // convert network byte order
-                    buf.pack_header.seq = htonl(buf.pack_header.seq);
-                    buf.pack_header.ack = htonl(buf.pack_header.ack);
-                    buf.pack_header.id = htons(buf.pack_header.id);
-                    buf.pack_header.flags = htons(buf.pack_header.flags);
-
-                    // send packet
-                    sendto(sockfd, &buf,
-                           sizeof(buf), 0,
-                           &all_connection[i].src_addr,
-                           all_connection[i].addrlen);
-
-                    // mark connectin as closed
-                    all_connection[i].is_FIN = 1;
-                    break;
-                }
-            }
+        { // FIN received
+            handle_fin(buf, sockfd);
         }
     }
 }
