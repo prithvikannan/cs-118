@@ -9,4 +9,4 @@ dist:
 	tar -czvf project2.tar.gz server.cpp client.cpp packet.h Makefile
 
 clean:
-	rm project2.tar.gz
+	rm client server project2.tar.gz *.file
