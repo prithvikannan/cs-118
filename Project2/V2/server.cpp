@@ -18,47 +18,19 @@
 #include <iostream>
 #include <map>
 
+#include "packet.h"
+
 using namespace std;
-
-#define FIN 1
-#define SYN 2
-#define ACK 4
-#define FIN_ACK 5
-#define SYN_ACK 6
-
-#define MAX_CONNECTIONS 10
 
 fd_set write_fds;
 fd_set read_fds;
 struct timeval tv;
 struct timeval ts_tv;
 
-unsigned int timeout = 10;
-unsigned int packet_size = 524;
-unsigned int data_size = 512;
-
 static void sig_handler(int signum)
 {
     exit(0);
 }
-
-struct header
-{
-    uint32_t seq;
-    uint32_t ack;
-    uint16_t id;
-    uint16_t flags;
-};
-
-typedef struct header header;
-
-struct packet
-{
-    header pack_header;
-    char data[512];
-};
-
-typedef struct packet packet;
 
 struct connection_info
 {
@@ -184,7 +156,7 @@ void handle_handshake(packet &buf, int sockfd, struct sockaddr client_addr, sock
                 all_connection[i].myfile.open(file_path);
 
                 // set rand seq number, increment ack number, set flags
-                all_connection[i].pack.pack_header.seq = rand() % 25600;
+                all_connection[i].pack.pack_header.seq = rand() % MAX_SEQ_NUMBER;
                 all_connection[i].pack.pack_header.ack = buf.pack_header.seq + 1;
                 all_connection[i].pack.pack_header.flags = SYN_ACK;
                 all_connection[i].pack.pack_header.id = i + 1;
@@ -222,7 +194,7 @@ void handle_handshake(packet &buf, int sockfd, struct sockaddr client_addr, sock
 }
 
 // helper function when ACK is sent
-void handle_ack(packet &buf, int sockfd, int data_size)
+void handle_ack(packet &buf, int sockfd, int recv_data)
 {
     for (int i = 0; i < MAX_CONNECTIONS; i++)
     {
@@ -235,7 +207,7 @@ void handle_ack(packet &buf, int sockfd, int data_size)
             }
             if (buf.pack_header.seq == all_connection[i].pack.pack_header.ack)
             { // packet is in the correct order
-                all_connection[i].pack.pack_header.ack += data_size;
+                all_connection[i].pack.pack_header.ack += recv_data;
                 all_connection[i].pack.pack_header.ack %= 102401;
 
                 if (buf.pack_header.ack == all_connection[i].pack.pack_header.seq + 1)
@@ -244,7 +216,7 @@ void handle_ack(packet &buf, int sockfd, int data_size)
                 }
 
                 // write data to file
-                all_connection[i].myfile.write(buf.data, data_size);
+                all_connection[i].myfile.write(buf.data, recv_data);
                 all_connection[i].myfile.flush();
             }
             else
@@ -372,7 +344,7 @@ int main(int argc, char *argv[])
     {
         memset(&buf, 0, sizeof(buf));
         int recv_byte = recvfrom(sockfd, &buf, sizeof(buf), 0, &client_addr, &client_addrlen);
-        int data_size = recv_byte - 12;
+        int recv_data = recv_byte - 12;
 
         // convert network to host byte order
         ntoh_reorder(buf);
@@ -386,7 +358,7 @@ int main(int argc, char *argv[])
         }
         else if (buf.pack_header.flags == ACK || buf.pack_header.flags == 0)
         { // ACK received
-            handle_ack(buf, sockfd, data_size);
+            handle_ack(buf, sockfd, recv_data);
         }
         else if (buf.pack_header.flags == FIN)
         { // FIN received

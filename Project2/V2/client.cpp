@@ -21,26 +21,15 @@
 #include <ctime>
 #include <vector>
 
+#include "packet.h"
+
 using namespace std;
-
-#define max_file_size 100 * 1024 * 1024
-#define packet_size 524
-#define data_size 512
-#define MSS 512
-#define MAX_retran 20
-
-#define FIN 1
-#define SYN 2
-#define ACK 4
-#define ACK_FIN 5
-#define SYN_ACK 6
 
 fd_set write_fds;
 
 unsigned int SS_THRESH = 10000;
-unsigned int CWND = 512;
+unsigned int CWND = 5120;
 unsigned int last_seq = 0;
-int max_seq_num = 102400;
 int timer_flag = 0;
 
 unsigned int seq_num = 0;
@@ -57,25 +46,7 @@ struct logger
 
 typedef struct logger logger;
 
-vector<logger> CWND_logs; //vector for packet logs
-
-struct header
-{
-    uint32_t seq;
-    uint32_t ack;
-    uint16_t id;
-    uint16_t flags;
-};
-
-typedef struct header header;
-
-struct packet
-{
-    header pack_header;
-    char data[data_size];
-};
-
-typedef struct packet packet;
+vector<logger> send_window; //vector for packet logs
 
 void set_header(packet &pack, uint32_t S, uint32_t A, uint16_t I, uint16_t F)
 {
@@ -94,7 +65,7 @@ void ntoh_reorder(packet &pack)
     pack.pack_header.flags = ntohs(pack.pack_header.flags);
 }
 
-//multithread 0.5 sec timer used in SYN and ENDING phase
+// 0.5 sec timer used in SYN and ENDING phase
 void timer(int ms)
 {
     //timeout for 0.5 second
@@ -159,7 +130,12 @@ void standard_output(char format, uint32_t S, uint32_t A, uint16_t ID, int F, un
 
 void print_packet(string message, packet buf)
 {
-    ntoh_reorder(buf);
+    // if message is type send or U?
+    if (message.compare("RECV"))
+    {
+        ntoh_reorder(buf);
+    }
+
     string flag;
     switch (buf.pack_header.flags)
     {
@@ -185,7 +161,7 @@ void print_packet(string message, packet buf)
     cout << message << " " << buf.pack_header.seq << " " << buf.pack_header.ack << " " << flag << endl;
 }
 
-//sigpipe signal handle, used to check network condition
+// sigpipe signal handle, used to check network condition
 void sigpipe_handler(int s)
 {
     if (s == SIGPIPE)
@@ -195,12 +171,12 @@ void sigpipe_handler(int s)
     }
 }
 
-//data receiving in stop and wait packet transfer, handshake and ending functions, expected ack number as an argument
+// data receiving in stop and wait packet transfer, handshake and ending functions, expected ack number as an argument
 int recv_pack(int sockfd, packet &recv_pack, struct addrinfo *anchor, uint32_t ack)
 {
     memset(&recv_pack, 0, packet_size);
 
-    //invoke the timer
+    // start timer the
     timer_flag = 0;
     thread timer_thread(timer, 500);
 
@@ -212,27 +188,19 @@ int recv_pack(int sockfd, packet &recv_pack, struct addrinfo *anchor, uint32_t a
         { //check whether the receive ack is the expected
             ntoh_reorder(recv_pack);
 
-            // outout receive infor
-            standard_output('R', recv_pack.pack_header.seq, recv_pack.pack_header.ack, recv_pack.pack_header.id, recv_pack.pack_header.flags, CWND, SS_THRESH);
-            if (ack == recv_pack.pack_header.ack || recv_pack.pack_header.flags == FIN) //if found the expected ACK
-            {
-                // printf("Received the expected ACk packet!\n");
+            // log packet
+            print_packet("RECV", recv_pack);
+
+            if (ack == recv_pack.pack_header.ack || recv_pack.pack_header.flags == FIN)
+            { // if found the expected ACK
                 timer_flag = 1;
                 timer_thread.join();
-
-                if (CWND < SS_THRESH)
-                    CWND += 512;
-
                 return byte_s;
-            }
-            else //if ack is received but not the expected one
-            {
-                continue;
             }
         }
     }
     timer_thread.join();
-    return -1; //indicating no expected ACK returns
+    return -1;
 }
 
 // helper function to compute the time since
@@ -304,15 +272,16 @@ void slidingWindow_data_trans(int sockfd, struct addrinfo *anchor, string file_n
     unsigned int recv_ack = 0;
     unsigned last_seq = 0;
     int file_length = 0;
-    int F = 4; //need a ACK for the first send
+    int F = ACK;
     chrono::steady_clock::time_point timeout_check;
-    timer_flag = 0; //reset timer flag
+    timer_flag = 0;
 
     ifstream myfile(file_name.c_str(), ios::binary | ios::ate);
 
     packet send_packet;
     packet recv_packet;
 
+    // check if file is okay
     if (myfile.good())
     {
         file_length = myfile.tellg();
@@ -329,66 +298,65 @@ void slidingWindow_data_trans(int sockfd, struct addrinfo *anchor, string file_n
         exit(EXIT_FAILURE);
     }
 
+    // set pointer to start of file
     myfile.seekg(0, myfile.beg);
-    timer_flag = 0; //flag for timeout
+    timer_flag = 0;
 
     while (1)
     {
         // check time
         chrono::steady_clock::time_point T = chrono::steady_clock::now();
 
-        // check whether there is a timeout
-        if (!CWND_logs.empty())
-        {
+        if (!send_window.empty())
+        { // check whether there is a timeout
             // 0.5 ceond timeout check
-            if ((chrono::duration_cast<chrono::milliseconds>(T - CWND_logs.front().send_time).count() > 500))
+            if ((chrono::duration_cast<chrono::milliseconds>(T - send_window.front().send_time).count() > 500))
             {
-                // resume original pos in file and restore seq number
-                //printf("time out detected!\n");
+                // reset file position to first packet
                 myfile.clear(); //clear the eof bit
-                myfile.seekg(CWND_logs.front().file_pos);
+                myfile.seekg(send_window.front().file_pos);
 
+                // restore sequence number
                 last_seq = seq_num;
-                seq_num = CWND_logs.front().seq;
-                CWND_logs.erase(CWND_logs.begin());
-                //CWND_logs.clear(); //remove all elements in CWND_logs vector
+                seq_num = send_window.front().seq;
 
-                // reset CWND window
-                SS_THRESH = CWND / 2;
-                CWND = 512;
-                CWND_space = CWND / 512; //clear CWND space for resend
+                // erase first element
+                send_window.erase(send_window.begin());
+                CWND_space = CWND / 512;
             }
         }
 
         // if there is still free space in CWND
         if (CWND_space > 0 && !myfile.eof())
         {
+            // read data into packet
             streampos file_pos = myfile.tellg(); //get cureent packet pos in file before read
             myfile.read(send_packet.data, data_size);
 
             if (myfile.fail() && !myfile.eof())
-            {
+            { // error check for reading
                 cerr << "ERROR: Error during reading from file" << endl;
                 close(sockfd);
                 exit(EXIT_FAILURE);
             }
 
-            // set right seq,ack,id and flags for packet to be sent (ACK number is 0, no flags)
+            // prepare headers in packet
             set_header(send_packet, seq_num, ack_num, id_num, F);
             ack_num = 0;
             F = 0; // no flags ever since
 
-            logger send_log;        //create a log for this packet
-            send_log.seq = seq_num; //logs its sequence num
+            // logging
+            logger send_log;
+            send_log.seq = seq_num;
 
-            //increment seq number by the sent bytes
+            // increment seq number by the sent bytes
             seq_num += myfile.gcount();
-            seq_num %= (102400 + 1); // max seq num is 102400
+            seq_num %= (MAX_SEQ_NUMBER + 1); // max seq num is 25600
 
             send_log.E_ACK = seq_num;                         //calculate the expected ack num for this packet
             send_log.file_pos = file_pos;                     //log its pos in file
             send_log.send_time = chrono::steady_clock::now(); //log the time it sent out
-            CWND_logs.push_back(send_log);                    //put this log onto vector
+            send_window.push_back(send_log);                    //put this log onto vector
 
             if (timer_flag == 0)
             {
@@ -396,14 +364,17 @@ void slidingWindow_data_trans(int sockfd, struct addrinfo *anchor, string file_n
                 timer_flag = 1;
             }
 
-            // outout send infor
+            // log packet
             if (ntohl(last_seq) >= ntohl(seq_num))
             {
-                standard_output('U', send_packet.pack_header.seq, send_packet.pack_header.ack, send_packet.pack_header.id, send_packet.pack_header.flags, CWND, SS_THRESH);
+                // dup packet
+                print_packet("SEND", send_packet);
                 last_seq = seq_num;
             }
             else
-                standard_output('S', send_packet.pack_header.seq, send_packet.pack_header.ack, send_packet.pack_header.id, send_packet.pack_header.flags, CWND, SS_THRESH);
+            {
+                print_packet("SEND", send_packet);
+            }
 
             // execute packet sending
             sendto(sockfd, &send_packet, 12 + myfile.gcount(), 0, anchor->ai_addr, anchor->ai_addrlen);
@@ -415,48 +386,37 @@ void slidingWindow_data_trans(int sockfd, struct addrinfo *anchor, string file_n
         // listen for incoming ACK packet
         int byte_s = recvfrom(sockfd, &recv_packet, packet_size, 0, anchor->ai_addr, &anchor->ai_addrlen);
         if (byte_s > 0)
-        { //check whether the receive ack is the expected
+        {
+
+            // convert to host byte order
             ntoh_reorder(recv_packet);
+
+            // check whether the receive ack is the expected
             recv_ack = recv_packet.pack_header.ack;
 
             // update the timer
             timeout_check = chrono::steady_clock::now();
 
-            // tranverse the queue
-            for (vector<int>::size_type i = 0; i != CWND_logs.size(); i++)
+            // traverse the queue
+            for (vector<int>::size_type i = 0; i != send_window.size(); i++)
             {
                 //if find this packet in queue, increment pop them from queue, increment window size
-                if (CWND_logs[i].E_ACK == recv_packet.pack_header.ack)
+                if (send_window[i].E_ACK == recv_packet.pack_header.ack)
                 {
-                    // outout received packet infor
-                    standard_output('R', recv_packet.pack_header.seq, recv_packet.pack_header.ack, recv_packet.pack_header.id, recv_packet.pack_header.flags, CWND, SS_THRESH);
-                    CWND_logs.erase(CWND_logs.begin(), CWND_logs.begin() + i + 1); //erase all slots before and including it
+                    // log packet
+                    print_packet("RECV", recv_packet);
 
-                    //update CWND window and SS_THRESH
-                    if (CWND < SS_THRESH)
-                    {
-                        CWND += 512;
-                        CWND_space += 2;
-                    }
-                    else
-                    {
-                        unsigned int dummy = CWND;
-                        CWND += 512 * 512 / CWND;
-                        if ((CWND / 512 - dummy / 512) >= 1)
-                            CWND_space += 2;
-                        else
-                            CWND_space += 1;
-                    }
+                    // erase all previous packets
+                    send_window.erase(send_window.begin(), send_window.begin() + i + 1);
+                    CWND_space += 2;
                     break;
                 }
-                if (i == CWND_logs.size() - 1)
-                    standard_output('D', recv_packet.pack_header.seq, recv_packet.pack_header.ack, recv_packet.pack_header.id, recv_packet.pack_header.flags, CWND, SS_THRESH);
             }
         }
         else
         { // if no bytes are received
             // check 10 second timeout
-            if (chrono::duration_cast<chrono::seconds>(chrono::steady_clock::now() - timeout_check).count() >= 10)
+            if (time_since(timeout_check) >= 10)
             {
                 cerr << "ERROR: nothing receive from server for 10 second" << endl;
                 close(sockfd);
@@ -465,7 +425,7 @@ void slidingWindow_data_trans(int sockfd, struct addrinfo *anchor, string file_n
         }
 
         // if reaches to the end of file and all ACKs are received
-        if (myfile.tellg() == -1 && CWND_logs.empty())
+        if (myfile.tellg() == -1 && send_window.empty())
         {
             break;
         }
@@ -523,12 +483,12 @@ void ending(int sockfd, struct addrinfo *anchor)
         int recv_bytes = recvfrom(sockfd, &recv_packet, packet_size, 0, anchor->ai_addr, &anchor->ai_addrlen);
         if (recv_bytes > 0)
         {
-            // log packet
-            print_packet("RECV", recv_packet);
 
             // convert network to host
             ntoh_reorder(recv_packet);
 
+            // log packet
+            print_packet("RECV", recv_packet);
             // update timer
             start_time = chrono::steady_clock::now();
 
@@ -541,8 +501,8 @@ void ending(int sockfd, struct addrinfo *anchor)
                     set_header(send_packet, seq_num, ack_num, id_num, ACK);
 
                     // send packet
-                    sendto(sockfd, &send_packet, packet_size, 0, anchor->ai_addr, anchor->ai_addrlen); 
-                    start_time = chrono::steady_clock::now();                                          
+                    sendto(sockfd, &send_packet, packet_size, 0, anchor->ai_addr, anchor->ai_addrlen);
+                    start_time = chrono::steady_clock::now();
 
                     // log packet
                     print_packet("SEND", send_packet);
@@ -575,15 +535,9 @@ void ending(int sockfd, struct addrinfo *anchor)
                             // log packet
                             print_packet("SEND", send_packet);
                         }
-                        else
-                        { //received some other packet
-                            standard_output('D', recv_packet.pack_header.seq, recv_packet.pack_header.ack, recv_packet.pack_header.id, recv_packet.pack_header.flags, CWND, SS_THRESH);
-                        }
                     }
                 }
             }
-            else //if not ecpected packet
-                standard_output('D', recv_packet.pack_header.seq, recv_packet.pack_header.ack, recv_packet.pack_header.id, recv_packet.pack_header.flags, CWND, SS_THRESH);
         }
     }
 }
@@ -640,12 +594,13 @@ int main(int argc, char *argv[])
         exit(EXIT_FAILURE);
     }
 
-    //set socketfd non-blocking
+    // set socketfd non-blocking
     int flags = fcntl(sockfd, F_GETFL, 0);
     fcntl(sockfd, F_SETFL, flags | O_NONBLOCK);
 
+    // TODO: fix sequence number wraparound bug, current solution is hacky
     // set random sequence number
-    seq_num = rand() % 25600;
+    seq_num = rand() % (MAX_SEQ_NUMBER/4);
 
     // start TCP handshake
     handshake(sockfd, anchor);
