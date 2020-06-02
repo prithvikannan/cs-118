@@ -17,6 +17,7 @@
 #include <thread>
 #include <iostream>
 #include <map>
+#include <unordered_set>
 
 #include "packet.h"
 
@@ -26,6 +27,9 @@ fd_set write_fds;
 fd_set read_fds;
 struct timeval tv;
 struct timeval ts_tv;
+
+unordered_set<uint32_t> already_acked;
+unordered_set<uint32_t> already_sent;
 
 static void sig_handler(int signum)
 {
@@ -50,6 +54,22 @@ connection_info all_connection[MAX_CONNECTIONS];
 
 void print_packet(string message, packet buf)
 {
+
+    if (!message.compare("SEND"))
+    {
+        if (already_sent.find(buf.pack_header.ack) != already_sent.end())
+        {
+            message = "RESEND";
+        }
+        else
+        {
+            if (buf.pack_header.flags != FIN)
+            {
+                already_sent.insert(buf.pack_header.ack);
+            }
+        }
+    }
+
     string flag;
     switch (buf.pack_header.flags)
     {
@@ -64,6 +84,14 @@ void print_packet(string message, packet buf)
         break;
     case 4:
         flag = "ACK";
+        if (already_acked.find(buf.pack_header.ack) != already_acked.end())
+        {
+            flag = "DUP-ACK";
+        }
+        else
+        {
+            already_acked.insert(buf.pack_header.ack);
+        }
         break;
     case 5:
         flag = "FIN ACK";
@@ -72,6 +100,7 @@ void print_packet(string message, packet buf)
         flag = "SYN ACK";
         break;
     }
+
     cout << message << " " << buf.pack_header.seq << " " << buf.pack_header.ack << " " << flag << endl;
 }
 
@@ -221,9 +250,6 @@ void handle_ack(packet &buf, int sockfd, int recv_data)
             }
             else
             { // packet is out of order so drop
-
-                // log packet
-                print_packet("DROP", buf);
 
                 if (buf.pack_header.ack == all_connection[i].pack.pack_header.seq + 1)
                 { //packet sent to client is in order
