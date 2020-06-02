@@ -174,7 +174,7 @@ int recv_pack(int sockfd, packet &recv_pack, struct addrinfo *base, uint32_t ack
 // helper function to compute the time since
 int64_t time_since(chrono::steady_clock::time_point start_time)
 {
-    chrono::duration_cast<chrono::seconds>(chrono::steady_clock::now() - start_time).count();
+    return chrono::duration_cast<chrono::seconds>(chrono::steady_clock::now() - start_time).count();
 }
 
 void send_packet(int sockfd, packet &buf, struct addrinfo *base)
@@ -246,7 +246,7 @@ void handshake(int sockfd, struct addrinfo *base)
 
 int64_t check_timeout(chrono::steady_clock::time_point T)
 {
-    chrono::duration_cast<chrono::milliseconds>(T - send_window.front().send_time).count();
+    return chrono::duration_cast<chrono::milliseconds>(T - send_window.front().send_time).count();
 }
 
 void prepare_log(logger &send_log, int seq_num, streampos file_pos)
