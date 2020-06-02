@@ -20,6 +20,7 @@
 #include <chrono>
 #include <ctime>
 #include <vector>
+#include <unordered_set>
 
 #include "packet.h"
 
@@ -47,6 +48,9 @@ struct logger
 typedef struct logger logger;
 
 vector<logger> send_window; //vector for packet logs
+
+unordered_set<uint32_t> already_sent;
+unordered_set<uint32_t> already_acked;
 
 void set_header(packet &pack, uint32_t S, uint32_t A, uint16_t I, uint16_t F)
 {
@@ -83,57 +87,23 @@ void timer(int ms)
     }
 }
 
-//output message format
-void standard_output(char format, uint32_t S, uint32_t A, uint16_t ID, int F, unsigned int window, unsigned int thresh)
-{
-    string FLAG = "";
-
-    if (format == 'S' || format == 'U')
-    {
-        S = ntohl(S);
-        A = ntohl(A);
-        ID = ntohs(ID);
-        F = ntohs(F);
-    }
-
-    switch (F)
-    {
-    case 0:
-        FLAG = " ";
-        break;
-    case 1:
-        FLAG = "FIN";
-        break;
-    case 2:
-        FLAG = "SYN";
-        break;
-    case 4:
-        FLAG = "ACK";
-        break;
-    case 5:
-        FLAG = "FIN ACK";
-        break;
-    case 6:
-        FLAG = "SYN ACK";
-        break;
-    }
-
-    if (format == 'R')
-        printf("RECV %u %u %u %u %u %s\n", S, A, ID, window, thresh, FLAG.c_str());
-    else if (format == 'D')
-        printf("DROP %u %u %u %s\n", S, A, ID, FLAG.c_str());
-    else if (format == 'S')
-        printf("SEND %u %u %u %u %u %s\n", S, A, ID, window, thresh, FLAG.c_str());
-    else if (format == 'U')
-        printf("SEND %u %u %u %u %u %s DUP\n", S, A, ID, window, thresh, FLAG.c_str());
-}
-
 void print_packet(string message, packet buf)
 {
-    // if message is type send or U?
-    if (message.compare("RECV"))
+    // if message is type send 
+    if (!message.compare("SEND"))
     {
         ntoh_reorder(buf);
+        if (already_sent.find(buf.pack_header.seq) != already_sent.end())
+        {
+            message = "RESEND";
+        }
+        else
+        {
+            if (buf.pack_header.flags != FIN)
+            {
+                already_sent.insert(buf.pack_header.seq);
+            }
+        }
     }
 
     string flag;
@@ -150,6 +120,14 @@ void print_packet(string message, packet buf)
         break;
     case 4:
         flag = "ACK";
+        if (already_acked.find(buf.pack_header.ack) != already_acked.end())
+        {
+            flag = "DUP-ACK";
+        }
+        else
+        {
+            already_acked.insert(buf.pack_header.ack);
+        }
         break;
     case 5:
         flag = "FIN ACK";
@@ -158,6 +136,7 @@ void print_packet(string message, packet buf)
         flag = "SYN ACK";
         break;
     }
+
     cout << message << " " << buf.pack_header.seq << " " << buf.pack_header.ack << " " << flag << endl;
 }
 
@@ -320,6 +299,7 @@ void slidingWindow_data_trans(int sockfd, struct addrinfo *anchor, string file_n
                 last_seq = seq_num;
                 seq_num = send_window.front().seq;
 
+                cout << "TIMEOUT " << seq_num << endl;
                 // erase first element
                 send_window.erase(send_window.begin());
                 CWND_space = CWND / 512;
@@ -356,7 +336,7 @@ void slidingWindow_data_trans(int sockfd, struct addrinfo *anchor, string file_n
             send_log.E_ACK = seq_num;                         //calculate the expected ack num for this packet
             send_log.file_pos = file_pos;                     //log its pos in file
             send_log.send_time = chrono::steady_clock::now(); //log the time it sent out
-            send_window.push_back(send_log);                    //put this log onto vector
+            send_window.push_back(send_log);                  //put this log onto vector
 
             if (timer_flag == 0)
             {
@@ -600,7 +580,7 @@ int main(int argc, char *argv[])
 
     // TODO: fix sequence number wraparound bug, current solution is hacky
     // set random sequence number
-    seq_num = rand() % (MAX_SEQ_NUMBER/4);
+    seq_num = rand() % (MAX_SEQ_NUMBER / 4);
 
     // start TCP handshake
     handshake(sockfd, anchor);
