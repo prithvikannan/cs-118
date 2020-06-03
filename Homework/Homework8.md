@@ -56,20 +56,42 @@ since mutually exclusive $P=4p(1-p)^3$
 
 ## Problem 3
 
+a. Switch 1: 3 times \
+Switch 2: 4 times \
+Switch 3: 4 times
+
+b. Switch 1
+|host|interface|
+|---|---|
+|A|1|
+|G|3|
+|D|2|
+|F|2|
+|J|3| \
+Switch 2
+|host|interface|
+|---|---|
+|A|1|
+|G|2|
+|D|1|
+|K|3|
+|J|3| \
+Switch 3
+|host|interface|
+|---|---|
+|A|1|
+|D|1|
+|K|2|
+|J|2|
+
+c. 9
+
+
 ## Problem 4
 
 a. No, 802.11 protocol will not break down. Each AP has their own MAC and SSID so that each the AP can 
 
-If two stations try to transmit at the same time, we must distinguish at the access
-points which access point the frame is meant for. 
-
-
-Suppose a host is in range of both
-AP's, but is only connected to one. When the host sends data to its desired AP,
-it is identified by its SSID and MAC address. The other AP will not process the data
-because it was not addressed to it. As a result, two AP's can operate over the same
-channel. However, the two ISPs are still sharing the same wireless bandwidth, and if
-the ISP's are different, there may be collisions.
+If two stations try to transmit at the same time, we must distinguish at the access points which access point the frame is meant for by its SSID and MAC address. The other AP will not process the data because it was not addressed to it. As a result, two AP's can operate over the same channel. However, the two ISPs are still sharing the same wireless bandwidth, and if the ISP's are different, there may be collisions.
 
 b. Since the channel is different, there will be no collisions
 
