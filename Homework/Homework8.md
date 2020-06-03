@@ -67,7 +67,8 @@ b. Switch 1
 |G|3|
 |D|2|
 |F|2|
-|J|3| \
+|J|3| 
+
 Switch 2
 |host|interface|
 |---|---|
@@ -75,7 +76,8 @@ Switch 2
 |G|2|
 |D|1|
 |K|3|
-|J|3| \
+|J|3| 
+
 Switch 3
 |host|interface|
 |---|---|
