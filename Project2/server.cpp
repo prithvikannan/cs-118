@@ -106,7 +106,7 @@ void print_packet(string message, packet buf)
         break;
     }
 
-    cout << message << " " << buf.pack_header.seq << " " << buf.pack_header.ack << " " << flag << endl;
+    cout << message << " " << (buf.pack_header.seq % MAX_SEQ_NUMBER) << " " << (buf.pack_header.ack % MAX_SEQ_NUMBER) << " " << flag << endl;
 }
 
 int create_socket(string port_num)
@@ -237,7 +237,6 @@ void handle_ack(packet &buf, int sockfd, int recv_data)
             if (compare_seq_to_ack(buf, all_connection[i].pack))
             { // packet is in the correct order
                 all_connection[i].pack.pack_header.ack += recv_data;
-                all_connection[i].pack.pack_header.ack %= MAX_SEQ_NUMBER;
 
                 if (compare_ack_to_seq(buf, all_connection[i].pack))
                 { // packet is in order

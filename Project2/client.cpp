@@ -43,7 +43,7 @@ void throwerror(string msg)
     exit(1);
 }
 
-struct logger
+struct packet_info
 {
     unsigned int E_ACK;
     unsigned int seq;
@@ -51,9 +51,9 @@ struct logger
     streampos file_pos;
 };
 
-typedef struct logger logger;
+typedef struct packet_info packet_info;
 
-vector<logger> send_window; //vector for packet logs
+vector<packet_info> send_window; //vector for packet logs
 
 unordered_set<uint32_t> already_sent;
 unordered_set<uint32_t> already_acked;
@@ -126,7 +126,7 @@ void print_packet(string message, packet buf)
         break;
     }
 
-    cout << message << " " << buf.pack_header.seq << " " << buf.pack_header.ack << " " << flag << endl;
+    cout << message << " " << (buf.pack_header.seq % MAX_SEQ_NUMBER) << " " << (buf.pack_header.ack % MAX_SEQ_NUMBER) << " " << flag << endl;
 }
 
 // sigpipe signal handle, used to check network condition
@@ -249,7 +249,7 @@ int64_t check_timeout(chrono::steady_clock::time_point T)
     return chrono::duration_cast<chrono::milliseconds>(T - send_window.front().send_time).count();
 }
 
-void prepare_log(logger &send_log, int seq_num, streampos file_pos)
+void prepare_log(packet_info &send_log, int seq_num, streampos file_pos)
 {
     send_log.E_ACK = seq_num;                         //calculate the expected ack num for this packet
     send_log.file_pos = file_pos;                     //log its pos in file
@@ -337,12 +337,11 @@ void slidingWindow_data_trans(int sockfd, struct addrinfo *base, string file_nam
             F = NONE; // no flags ever since
 
             // logging
-            logger send_log;
+            packet_info send_log;
             send_log.seq = seq_num;
 
             // increment seq number by the sent bytes
             seq_num += myfile.gcount();
-            seq_num %= (MAX_SEQ_NUMBER + 1); // max seq num is 25600
 
             prepare_log(send_log, seq_num, file_pos);
 
