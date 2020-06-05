@@ -86,7 +86,7 @@ Switch 3
 |K|2|
 |J|2|
 
-c. 9
+c. 11
 
 
 ## Problem 4
