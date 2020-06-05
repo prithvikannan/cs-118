@@ -91,9 +91,7 @@ c. 11
 
 ## Problem 4
 
-a. No, 802.11 protocol will not break down. Each AP has their own MAC and SSID so that each the AP can 
-
-If two stations try to transmit at the same time, we must distinguish at the access points which access point the frame is meant for by its SSID and MAC address. The other AP will not process the data because it was not addressed to it. As a result, two AP's can operate over the same channel. However, the two ISPs are still sharing the same wireless bandwidth, and if the ISP's are different, there may be collisions.
+a. No, 802.11 protocol will not break down. Each AP has their own MAC and SSID so that each the AP can distinguish at the access points which access point the frame is meant for by its SSID and MAC address. The other AP will not process the data because it was not addressed to it. As a result, two AP's can operate over the same channel. However, the two ISPs are still sharing the same wireless bandwidth, and if the ISP's are different, there may be collisions.
 
 b. Since the channel is different, there will be no collisions
 
