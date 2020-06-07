@@ -311,7 +311,7 @@ void slidingWindow_data_trans(int sockfd, struct addrinfo *base, string file_nam
                 last_seq = seq_num;
                 seq_num = send_window.front().seq;
 
-                cout << "TIMEOUT " << seq_num << endl;
+                cout << "TIMEOUT " << (seq_num % MAX_SEQ_NUMBER) << endl;
                 // erase first element
                 send_window.erase(send_window.begin());
                 CWND_space = CWND / 512;
